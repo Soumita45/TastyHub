@@ -1,0 +1,226 @@
+import foodSchema from "../models/foodSchema.js";
+import path from "path"
+import fs from "fs"
+export const addFood = async (req, res) => {
+    try {
+        if (req.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Only admin can add food"
+            });
+        }
+
+        const { name, description, price, category, foodType, ingredients, image } = req.body;
+
+        if (!["veg", "non-veg"].includes(foodType)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid food type"
+            });
+        }
+
+        const alreadyExists = await foodSchema.findOne({
+            name,
+            category,
+            foodType
+        });
+
+        if (alreadyExists) {
+            return res.status(409).json({
+                success: false,
+                message: "Food already exists"
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "No image uploaded",
+            })
+        }
+
+        const allowedTypes = ["image/jpeg", "image/png", "image/svg"]
+        if (!allowedTypes.includes(req.file.mimetype)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid file type",
+            })
+        }
+
+        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`
+
+        const food = await foodSchema.create({
+            name,
+            description,
+            price,
+            category,
+            foodType,
+            ingredients,
+            image: imageUrl,
+            createdBy: req.userId,
+            rating: 0,
+            isAvailable: true
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Food added successfully",
+            food
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const getAllFood = async (req, res) => {
+    try {
+        let query = {};
+
+        if (req.role !== "admin") {
+            query.isAvailable = true;
+        }
+
+        const foods = await foodSchema.find(query)
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            total: foods.length,
+            data: foods
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const getSingleFood = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const food = await foodSchema.findById(id);
+
+        if (!food) {
+            return res.status(404).json({
+                success: false,
+                message: "Food not found"
+            });
+        }
+
+        if (req.role !== "admin" && !food.isAvailable) {
+            return res.status(403).json({
+                success: false,
+                message: "This food is not available"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: food
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const deleteFood = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (req.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Only admin can delete food"
+            });
+        }
+
+        const food = await foodSchema.findById(id);
+
+        if (!food) {
+            return res.status(404).json({
+                success: false,
+                message: "Food not found"
+            });
+        }
+
+        await foodSchema.findByIdAndDelete(id);
+
+        res.status(200).json({
+            success: true,
+            message: "Food deleted successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const updateFood = async (req, res) => {
+  try {
+
+    if (req.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Only admin can update food"
+      });
+    }
+
+    const { id } = req.params;
+
+    const existingFood = await foodSchema.findById(id);
+
+    if (!existingFood) {
+      return res.status(404).json({
+        success: false,
+        message: "Food not found"
+      });
+    }
+
+    let updateData = { ...req.body };
+
+    if (req.file) {
+
+
+      if (existingFood.image) {
+        const fileName = existingFood.image.split("/").pop();
+        const oldPath = path.join("upload", fileName);
+
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+
+      updateData.image = `http://localhost:8000/uploads/${req.file.filename}`;
+    }
+
+    const updatedFood = await foodSchema.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Food updated successfully",
+      data: updatedFood
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+
