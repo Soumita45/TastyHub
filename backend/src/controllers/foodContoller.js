@@ -118,6 +118,17 @@ export const getAllFood = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
+        if (search && foods.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: "No search result found",
+                currentPage: page,
+                totalPages: 0,
+                totalItems: 0,
+                data: []
+            });
+        }
+
         res.status(200).json({
             success: true,
             currentPage: page,
@@ -260,41 +271,41 @@ export const updateFood = async (req, res) => {
 };
 
 export const changeAvailability = async (req, res) => {
-  try {
+    try {
 
-    if (req.role !== "admin") {
-      return res.status(403).json({
-        success: false,
-        message: "Only admin can update availability"
-      });
+        if (req.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Only admin can update availability"
+            });
+        }
+
+        const { id } = req.params;
+
+        const food = await foodSchema.findById(id);
+
+        if (!food) {
+            return res.status(404).json({
+                success: false,
+                message: "Food not found"
+            });
+        }
+
+        food.isAvailable = !food.isAvailable;
+
+        await food.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Availability updated",
+            data: food
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
-
-    const { id } = req.params;
-
-    const food = await foodSchema.findById(id);
-
-    if (!food) {
-      return res.status(404).json({
-        success: false,
-        message: "Food not found"
-      });
-    }
-
-    food.isAvailable = !food.isAvailable;
-
-    await food.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Availability updated",
-      data: food
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
 };
 

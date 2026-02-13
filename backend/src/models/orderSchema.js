@@ -19,7 +19,12 @@ const orderSchema = new mongoose.Schema({
     status: {
         type: String,
         default: "pending"
-    }
+    },
+    paymentMethod: {
+        type: String,
+        enum: ["upi", "netbanking", "cod", "card"],
+        default: null
+    },
 }, { timestamps: true });
 
 export default mongoose.model("order", orderSchema);

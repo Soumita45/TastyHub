@@ -164,47 +164,8 @@ export const getCart = async (req, res) => {
     }
 };
 
-export const checkout = async (req, res) => {
-    try {
 
-        if (req.role !== "user") {
-            return res.status(403).json({
-                message: "Only user can checkout"
-            });
-        }
 
-        const cart = await cartSchema.findOne({ user: req.userId });
-
-        if (!cart || cart.items.length === 0) {
-            return res.status(400).json({
-                message: "Cart is empty"
-            });
-        }
-
-        // Create order
-        const order = await orderSchema.create({
-            user: req.userId,
-            items: cart.items,
-            totalPrice: cart.totalPrice,
-            status: "pending"
-        });
-
-        // Clear cart
-        cart.items = [];
-        cart.totalPrice = 0;
-        await cart.save();
-
-        res.status(200).json({
-            message: "Order placed successfully",
-            order
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
 
 export const removeCartItem = async (req, res) => {
     try {
