@@ -11,4 +11,5 @@ userRoute.post("/register", Validate(registerSchema), register)
 userRoute.delete("/logout", hashToken, logout)
 userRoute.get("/getProfile", hashToken, getProfile)
 userRoute.delete("/deleteProfile", hashToken, deleteProfile)
+
 export default userRoute

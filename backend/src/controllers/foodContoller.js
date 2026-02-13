@@ -1,6 +1,7 @@
 import foodSchema from "../models/foodSchema.js";
 import path from "path"
 import fs from "fs"
+
 export const addFood = async (req, res) => {
     try {
         if (req.role !== "admin") {
@@ -75,18 +76,53 @@ export const addFood = async (req, res) => {
 
 export const getAllFood = async (req, res) => {
     try {
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || "";
+        const sort = req.query.sort || "latest";
+        const category = req.query.category;
+        const foodType = req.query.foodType;
+
+        const skip = (page - 1) * limit;
+
         let query = {};
 
+        if (search) {
+            query.name = { $regex: search, $options: "i" };
+        }
+
+        if (category) {
+            query.category = category;
+        }
+
+        if (foodType) {
+            query.foodType = foodType;
+        }
         if (req.role !== "admin") {
             query.isAvailable = true;
         }
 
-        const foods = await foodSchema.find(query)
-            .sort({ createdAt: -1 });
+        const sortOptions = {
+            price_asc: { price: 1 },
+            price_desc: { price: -1 },
+            rating: { rating: -1 },
+            latest: { createdAt: -1 }
+        };
+
+        const total = await foodSchema.countDocuments(query);
+
+        const foods = await foodSchema
+            .find(query)
+            .sort(sortOptions[sort] || sortOptions.latest)
+            .skip(skip)
+            .limit(limit);
 
         res.status(200).json({
             success: true,
-            total: foods.length,
+            currentPage: page,
+            totalPages: Math.ceil(total / limit),
+            totalItems: total,
             data: foods
         });
 
@@ -166,53 +202,92 @@ export const deleteFood = async (req, res) => {
 };
 
 export const updateFood = async (req, res) => {
+    try {
+
+        if (req.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Only admin can update food"
+            });
+        }
+
+        const { id } = req.params;
+
+        const existingFood = await foodSchema.findById(id);
+
+        if (!existingFood) {
+            return res.status(404).json({
+                success: false,
+                message: "Food not found"
+            });
+        }
+
+        let updateData = { ...req.body };
+
+        if (req.file) {
+
+
+            if (existingFood.image) {
+                const fileName = existingFood.image.split("/").pop();
+                const oldPath = path.join("upload", fileName);
+
+                if (fs.existsSync(oldPath)) {
+                    fs.unlinkSync(oldPath);
+                }
+            }
+
+            updateData.image = `http://localhost:8000/uploads/${req.file.filename}`;
+        }
+
+        const updatedFood = await foodSchema.findByIdAndUpdate(
+            id,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Food updated successfully",
+            data: updatedFood
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const changeAvailability = async (req, res) => {
   try {
 
     if (req.role !== "admin") {
       return res.status(403).json({
         success: false,
-        message: "Only admin can update food"
+        message: "Only admin can update availability"
       });
     }
 
     const { id } = req.params;
 
-    const existingFood = await foodSchema.findById(id);
+    const food = await foodSchema.findById(id);
 
-    if (!existingFood) {
+    if (!food) {
       return res.status(404).json({
         success: false,
         message: "Food not found"
       });
     }
 
-    let updateData = { ...req.body };
+    food.isAvailable = !food.isAvailable;
 
-    if (req.file) {
-
-
-      if (existingFood.image) {
-        const fileName = existingFood.image.split("/").pop();
-        const oldPath = path.join("upload", fileName);
-
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
-        }
-      }
-
-      updateData.image = `http://localhost:8000/uploads/${req.file.filename}`;
-    }
-
-    const updatedFood = await foodSchema.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true, runValidators: true }
-    );
+    await food.save();
 
     res.status(200).json({
       success: true,
-      message: "Food updated successfully",
-      data: updatedFood
+      message: "Availability updated",
+      data: food
     });
 
   } catch (error) {
@@ -222,5 +297,4 @@ export const updateFood = async (req, res) => {
     });
   }
 };
-
 
