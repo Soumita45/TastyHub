@@ -27,7 +27,11 @@ const userSchema = new mongoose.Schema(
         isLogin: {
             type: Boolean,
             default: false
-        }
+        },
+        token: {
+            type: String,
+            default: null
+        },
     }, { timestamps: true });
 
 export default mongoose.model("user", userSchema);

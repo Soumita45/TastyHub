@@ -24,7 +24,7 @@ export const register = async (req, res) => {
             email,
             password: hashPassword,
         })
-        const token = generateRegisterToken({ id: user._id });
+        const token = generateRegisterToken( user._id );
         verifyMail(token, email)
         user.token = token;
         await user.save();
@@ -42,6 +42,7 @@ export const register = async (req, res) => {
         })
     }
 }
+
 //login
 export const login = async (req, res) => {
     try {
@@ -190,3 +191,4 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+

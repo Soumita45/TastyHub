@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 import userSchema from "../models/userSchema.js";
 
 
+
 export const verifiyToken = async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
