@@ -137,7 +137,7 @@ export const getProfile = async (req, res) => {
     try {
         const user = await userSchema.findById(req.userId)
         if (!user) {
-            return res.status(401).json({
+            return res.status(404).json({
                 success: true,
                 message: "user not found",
             });
@@ -152,7 +152,7 @@ export const getProfile = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: error.massege,
+            message: error.message,
         });
     }
 }

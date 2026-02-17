@@ -1,13 +1,13 @@
-import { Home, User, Heart, ShoppingBag, LayoutDashboard, Users, LogOut, Menu, X } from "lucide-react";
+import { User, Heart, ShoppingBag, LayoutDashboard, Users, LogOut, Menu, X, Utensils } from "lucide-react";
 import { useState } from "react";
 import LogoutModal from "../modals/logoutModal";
+import Profile from "../../pages/Profile";
 
 const Sidebar = () => {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("home");
-
-    const [logout, setLogout] = useState(false)
+    const [logout, setLogout] = useState(false);
 
     const role = localStorage.getItem("role");
     const name = localStorage.getItem("name");
@@ -22,10 +22,12 @@ const Sidebar = () => {
             .join("")
             .toUpperCase();
     };
+
     const menuClass = (tab) =>
-        `w-full flex items-center gap-3 p-3 rounded-lg transition ${activeTab === tab
-            ? "bg-red-100 font-bold"
-            : "hover:bg-red-100"
+        `w-full flex items-center gap-3 p-3 rounded-lg transition ${
+            activeTab === tab
+                ? "bg-red-100 font-bold"
+                : "hover:bg-red-100"
         }`;
 
     return (
@@ -94,7 +96,7 @@ const Sidebar = () => {
                                     onClick={() => setActiveTab("home")}
                                     className={menuClass("home")}
                                 >
-                                    <Home size={18} /> Home
+                                    <Utensils size={18} /> Menu
                                 </button>
 
                                 <button
@@ -163,13 +165,12 @@ const Sidebar = () => {
 
             {/* MAIN CONTENT */}
             <div className="flex-1 p-6">
-                <h1 className="text-2xl font-bold capitalize mb-4">
-                    {activeTab}
-                </h1>
 
-                <div className="bg-white p-6 rounded shadow">
+                
+
+                <div>
                     {activeTab === "home" && <div>User Home Content</div>}
-                    {activeTab === "profile" && <div>Profile Content</div>}
+                    {activeTab === "profile" && <Profile />}
                     {activeTab === "wishlist" && <div>Wishlist Content</div>}
                     {activeTab === "orders" && <div>Orders Content</div>}
 
@@ -177,7 +178,9 @@ const Sidebar = () => {
                     {activeTab === "manageUsers" && <div>Manage Users</div>}
                     {activeTab === "manageOrders" && <div>Manage Orders</div>}
                 </div>
+
             </div>
+
             {logout && <LogoutModal onCancle={() => setLogout(false)} />}
         </div>
     );

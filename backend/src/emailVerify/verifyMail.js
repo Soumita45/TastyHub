@@ -11,7 +11,7 @@ export const verifyMail = async (token, email) => {
         },
     })
 
-    const verificationLink = `http://localhost:5173/user/verify/${token}`
+    const verificationLink = `http://localhost:5173/verify/${token}`
 
     const mailConfigurations = {
         from: process.env.userMail,
