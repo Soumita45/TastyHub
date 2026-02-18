@@ -3,6 +3,8 @@ import bcrypt from "bcrypt"
 import { generateAccessToken, generateRefreshToken, generateRegisterToken } from "../utils/generateToken.js";
 import sessionSchema from "../models/sessionSchema.js";
 import { verifyMail } from "../emailVerify/verifyMail.js";
+import orderSchema from "../models/orderSchema.js";
+import foodSchema from "../models/foodSchema.js";
 
 //register
 export const register = async (req, res) => {
@@ -24,7 +26,7 @@ export const register = async (req, res) => {
             email,
             password: hashPassword,
         })
-        const token = generateRegisterToken( user._id );
+        const token = generateRegisterToken(user._id);
         verifyMail(token, email)
         user.token = token;
         await user.save();
@@ -173,22 +175,84 @@ export const deleteProfile = async (req, res) => {
 
 //updateProfile
 export const updateProfile = async (req, res) => {
-  try {
-    const { name, email } = req.body;
+    try {
+        const { name, email } = req.body;
 
-    const user = await User.findByIdAndUpdate(
-      req.userId,
-      { name, email },
-      { new: true }
-    ).select("-password");
+        const user = await User.findByIdAndUpdate(
+            req.userId,
+            { name, email },
+            { new: true }
+        ).select("-password");
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated",
+            user
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+//getAllUser
+export const getAllUser = async (req, res) => {
+    try {
+        const loggedInUser = await userSchema.findById(req.userId);
+
+        if (!loggedInUser) {
+            return res.status(404).json({
+                success: false,
+                message: "Logged in user not found"
+            });
+        }
+
+        if (loggedInUser.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Access denied. Admin only."
+            });
+        }
+
+        const users = await userSchema
+            .find({ role: "user" })
+            .select("-password");
+
+        return res.status(200).json({
+            success: true,
+            message: "All users fetched successfully",
+            users
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const getTotal = async (req, res) => {
+  try {
+
+    const totalUsers = await userSchema.countDocuments({ role: "user" });
+
+    const totalOrders = await orderSchema.countDocuments();
+
+    const totalFoods = await foodSchema.countDocuments();
 
     res.status(200).json({
       success: true,
-      message: "Profile updated",
-      user
+      stats: {
+        totalUsers,
+        totalOrders,
+        totalFoods,
+      },
     });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
-

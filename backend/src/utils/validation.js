@@ -4,8 +4,8 @@ export const addFoodSchema = yup.object({
   name: yup
     .string()
     .trim()
-     .min(2, "Name must be at least 2 characters long") 
-    .max(50, "Name cannot exceed 50 characters") 
+    .min(2, "Name must be at least 2 characters long")
+    .max(50, "Name cannot exceed 50 characters")
     .required("Food name is required"),
 
   description: yup
@@ -27,8 +27,8 @@ export const addFoodSchema = yup.object({
     .required("Food type is required"),
 
   ingredients: yup
-    .array()
-    .of(yup.string()),
+    .string()
+    .required("Ingredients is required"),
 
 });
 
@@ -76,7 +76,7 @@ export const Validate = (schema) => async (req, res, next) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      errors: error.errors   
+      errors: error.errors
     });
   }
 };

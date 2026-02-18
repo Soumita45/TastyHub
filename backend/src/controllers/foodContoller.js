@@ -78,7 +78,7 @@ export const getAllFood = async (req, res) => {
     try {
 
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 4;
         const search = req.query.search || "";
         const sort = req.query.sort || "latest";
         const category = req.query.category;

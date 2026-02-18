@@ -1,17 +1,34 @@
-import { User, Heart, ShoppingBag, LayoutDashboard, Users, LogOut, Menu, X, Utensils } from "lucide-react";
+import { User, Heart, ShoppingBag, LayoutDashboard, Users, LogOut, Menu, X, Utensils,
+    UtensilsCrossed
+} from "lucide-react";
 import { useState } from "react";
 import LogoutModal from "../modals/logoutModal";
 import Profile from "../../pages/Profile";
+import ManageUser from "../section/ManageUser";
+import AdminDashboard from "../section/AdminDashboard";
+
+import AllOrder from "../food/AllOrder";
+import Foods from "../food/Foods";
 
 const Sidebar = () => {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState("home");
+  
     const [logout, setLogout] = useState(false);
 
     const role = localStorage.getItem("role");
     const name = localStorage.getItem("name");
     const user = localStorage.getItem("email");
+  
+
+const getDefaultTab = () => {
+    if (role === "admin") return "AddFoods";
+    if (role === "user") return "manu";
+    return "";
+};
+
+const [activeTab, setActiveTab] = useState(getDefaultTab());
+
 
     const getInitials = (name = "") => {
         return name
@@ -31,7 +48,7 @@ const Sidebar = () => {
         }`;
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-gray-100 overflow-hidden">
 
             {/* Mobile Menu Button */}
             <button
@@ -86,37 +103,25 @@ const Sidebar = () => {
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 pt-8 px-3">
+                <nav className="flex-1 pt-8 px-3 overflow-y-auto">
                     <div className="flex flex-col gap-3">
 
                         {/* USER MENU */}
                         {role === "user" && (
                             <>
-                                <button
-                                    onClick={() => setActiveTab("home")}
-                                    className={menuClass("home")}
-                                >
+                                <button onClick={() => setActiveTab("manu")} className={menuClass("home")}>
                                     <Utensils size={18} /> Menu
                                 </button>
 
-                                <button
-                                    onClick={() => setActiveTab("profile")}
-                                    className={menuClass("profile")}
-                                >
+                                <button onClick={() => setActiveTab("profile")} className={menuClass("profile")}>
                                     <User size={18} /> Profile
                                 </button>
 
-                                <button
-                                    onClick={() => setActiveTab("wishlist")}
-                                    className={menuClass("wishlist")}
-                                >
+                                <button onClick={() => setActiveTab("wishlist")} className={menuClass("wishlist")}>
                                     <Heart size={18} /> Wishlist
                                 </button>
 
-                                <button
-                                    onClick={() => setActiveTab("orders")}
-                                    className={menuClass("orders")}
-                                >
+                                <button onClick={() => setActiveTab("orders")} className={menuClass("orders")}>
                                     <ShoppingBag size={18} /> Orders
                                 </button>
                             </>
@@ -125,25 +130,20 @@ const Sidebar = () => {
                         {/* ADMIN MENU */}
                         {role === "admin" && (
                             <>
-                                <button
-                                    onClick={() => setActiveTab("dashboard")}
-                                    className={menuClass("dashboard")}
-                                >
+                                <button onClick={() => setActiveTab("dashboard")} className={menuClass("dashboard")}>
                                     <LayoutDashboard size={18} /> Dashboard
                                 </button>
 
-                                <button
-                                    onClick={() => setActiveTab("manageUsers")}
-                                    className={menuClass("manageUsers")}
-                                >
+                                <button onClick={() => setActiveTab("manageUsers")} className={menuClass("manageUsers")}>
                                     <Users size={18} /> Manage Users
                                 </button>
 
-                                <button
-                                    onClick={() => setActiveTab("manageOrders")}
-                                    className={menuClass("manageOrders")}
-                                >
+                                <button onClick={() => setActiveTab("manageOrders")} className={menuClass("manageOrders")}>
                                     <ShoppingBag size={18} /> Manage Orders
+                                </button>
+
+                                <button onClick={() => setActiveTab("AddFoods")} className={menuClass("AddFoods")}>
+                                    <UtensilsCrossed size={18} /> Add Foods
                                 </button>
                             </>
                         )}
@@ -164,19 +164,20 @@ const Sidebar = () => {
             </div>
 
             {/* MAIN CONTENT */}
-            <div className="flex-1 p-6">
+            <div className="flex-1 flex flex-col h-screen overflow-hidden">
 
-                
+                <div className="flex-1 overflow-y-auto p-6">
 
-                <div>
-                    {activeTab === "home" && <div>User Home Content</div>}
+                    {activeTab === "manu" && <div>User Home Content</div>}
                     {activeTab === "profile" && <Profile />}
                     {activeTab === "wishlist" && <div>Wishlist Content</div>}
                     {activeTab === "orders" && <div>Orders Content</div>}
 
-                    {activeTab === "dashboard" && <div>Admin Dashboard</div>}
-                    {activeTab === "manageUsers" && <div>Manage Users</div>}
-                    {activeTab === "manageOrders" && <div>Manage Orders</div>}
+                    {activeTab === "dashboard" && <AdminDashboard />}
+                    {activeTab === "manageUsers" && <ManageUser />}
+                    {activeTab === "manageOrders" && <AllOrder />}
+                    {activeTab === "AddFoods" &&<Foods/> }
+
                 </div>
 
             </div>
