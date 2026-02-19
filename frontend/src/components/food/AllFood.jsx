@@ -149,7 +149,7 @@ const AllFood = () => {
                     )}
                 </div>
 
-                {/* ================= Desktop Table ================= */}
+                {/* Desktop Table */}
                 <div className="hidden md:block overflow-x-auto bg-white rounded shadow-sm">
 
                     <table className="w-full border border-gray-200 text-sm">
@@ -221,7 +221,7 @@ const AllFood = () => {
                     </table>
                 </div>
 
-                {/* ================= Pagination ================= */}
+                {/* Pagination*/}
                 <div className="flex justify-center items-center mt-4 gap-2 text-sm">
 
                     <button
