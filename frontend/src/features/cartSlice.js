@@ -43,7 +43,7 @@ export const addToCart = createAsyncThunk(
     }
 );
 
-// 🔹 REMOVE ITEM
+//  REMOVE ITEM
 export const removeItem = createAsyncThunk(
     "cart/removeItem",
     async (foodId, { rejectWithValue }) => {
@@ -63,6 +63,7 @@ export const removeItem = createAsyncThunk(
     }
 );
 
+//update
 export const updateCartItem = createAsyncThunk(
     "cart/updateCart",
     async ({ foodId, type }, { rejectWithValue }) => {

@@ -7,7 +7,7 @@ import foodRoute from "./src/routes/foodRoute.js";
 import { upload } from "./src/controllers/multerController.js";
 import cartRoute from "./src/routes/cartRoute.js";
 import orderRoute from "./src/routes/orderRoute.js";
-import wishlistRoute from "./src/routes/wishlistRoute.js";
+;
 
 const app=express()
 const port=process.env.port|| 8001;
@@ -22,7 +22,6 @@ app.use("/user",userRoute)
 app.use("/food",foodRoute)
 app.use("/cart",cartRoute)
 app.use("/order",orderRoute)
-app.use("/wishlist",wishlistRoute)
 
 app.listen(port,()=>{
     console.log(`post number ${port}`)

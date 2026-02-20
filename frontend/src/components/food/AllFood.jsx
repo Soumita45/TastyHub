@@ -11,7 +11,6 @@ const AllFood = () => {
     );
 
     const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("");
     const [foodType, setFoodType] = useState("");
     const [page, setPage] = useState(1);
 
@@ -19,8 +18,8 @@ const AllFood = () => {
     const [selectedFood, setSelectedFood] = useState(null);
 
     useEffect(() => {
-        dispatch(getAllFoods({ page, search, category, foodType }));
-    }, [dispatch, page, search, category, foodType]);
+        dispatch(getAllFoods({ page, search, foodType }));
+    }, [dispatch, page, search, foodType]);
 
     const handleDelete = (id) => {
         dispatch(deleteFoods(id));
@@ -55,19 +54,7 @@ const AllFood = () => {
                         className="border p-2 rounded text-sm"
                     />
 
-                    <select
-                        value={category}
-                        onChange={(e) => {
-                            setCategory(e.target.value);
-                            setPage(1);
-                        }}
-                        className="border p-2 rounded text-sm"
-                    >
-                        <option value="">All Category</option>
-                        <option value="FastFood">FastFood</option>
-                        <option value="Dessert">Dessert</option>
-                        <option value="Drinks">Drinks</option>
-                    </select>
+                  
 
                     <select
                         value={foodType}
@@ -92,7 +79,7 @@ const AllFood = () => {
                     <p className="text-red-500 text-sm mb-3">{error}</p>
                 )}
 
-                {/* ================= Mobile View ================= */}
+                {/*  Mobile View  */}
                 <div className="grid gap-3 md:hidden">
                     {foods?.length > 0 ? (
                         foods.map((food) => (

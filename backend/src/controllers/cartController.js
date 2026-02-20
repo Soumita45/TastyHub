@@ -164,9 +164,6 @@ export const getCart = async (req, res) => {
     }
 };
 
-
-
-
 export const removeCartItem = async (req, res) => {
     try {
         if (!req.userId) {

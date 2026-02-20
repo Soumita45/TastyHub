@@ -14,7 +14,9 @@ export const checkout = async (req, res) => {
                 message: "Please select payment method"
             });
         }
-        const cart = await cartSchema.findOne({ user: req.userId });
+        const cart = await cartSchema
+            .findOne({ user: req.userId })
+            .populate("items.food");
 
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({
@@ -73,7 +75,6 @@ export const getMyOrders = async (req, res) => {
         });
     }
 };
-
 
 export const getAllOrders = async (req, res) => {
     try {

@@ -11,7 +11,10 @@ import {
   UtensilsCrossed,
   ShoppingCart,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCart } from "../../features/cartSlice";
+
 import LogoutModal from "../modals/logoutModal";
 import Profile from "../../pages/Profile";
 import ManageUser from "../section/ManageUser";
@@ -20,12 +23,24 @@ import AllOrder from "../food/AllOrder";
 import Foods from "../food/Foods";
 import UserFoods from "../../pages/UserFood";
 import CartModal from "../modals/CartModal";
-
+import MyOrders from "../food/MyOrder";
 
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [logout, setLogout] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.cart);
+
+
+
+  const totalCount =
+    cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
 
   const role = localStorage.getItem("role");
   const name = localStorage.getItem("name");
@@ -52,19 +67,18 @@ const Sidebar = () => {
   };
 
   const menuClass = (tab) =>
-    `w-full flex items-center gap-3 p-3 rounded-lg transition ${
-      activeTab === tab
-        ? isAdmin
-          ? "bg-blue-600 text-white font-semibold"
-          : "bg-red-100 text-red-600 font-semibold"
-        : isAdmin
+    `w-full flex items-center gap-3 p-3 rounded-lg transition ${activeTab === tab
+      ? isAdmin
+        ? "bg-blue-600 text-white font-semibold"
+        : "bg-red-100 text-red-600 font-semibold"
+      : isAdmin
         ? "hover:bg-gray-700"
         : "hover:bg-red-100"
     }`;
 
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
-      
+
       {/* Mobile Menu Button */}
       <button
         onClick={() => setSidebarOpen(true)}
@@ -83,26 +97,23 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed lg:relative z-40 h-screen w-64 transition-transform duration-300 ${
-          sidebarOpen
+        className={`fixed lg:relative z-40 h-screen w-64 transition-transform duration-300 ${sidebarOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0"
-        } flex flex-col shadow-lg
+          } flex flex-col shadow-lg
         ${isAdmin ? "bg-gray-900 text-white" : "bg-white text-gray-800"}
         `}
       >
         {/* Header */}
         <div
-          className={`p-4 border-b flex items-center gap-3 ${
-            isAdmin
+          className={`p-4 border-b flex items-center gap-3   ${isAdmin
               ? "bg-blue-700 text-white border-gray-700"
               : "bg-red-500 text-white"
-          }`}
+            }`}
         >
           <div
-            className={`w-12 h-12 rounded-full bg-white flex items-center justify-center font-bold text-lg ${
-              isAdmin ? "text-blue-700" : "text-red-500"
-            }`}
+            className={`w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0 ${isAdmin ? "text-blue-700" : "text-red-500"
+              }`}
           >
             {getInitials(name)}
           </div>
@@ -132,17 +143,29 @@ const Sidebar = () => {
                 <User size={18} /> Profile
               </button>
 
-              <button onClick={() => setActiveTab("wishlist")} className={menuClass("wishlist")}>
-                <Heart size={18} /> Wishlist
-              </button>
-
+           
               <button onClick={() => setActiveTab("orders")} className={menuClass("orders")}>
                 <ShoppingBag size={18} /> Orders
               </button>
 
-             
-              <button onClick={() => setCartOpen(true)} className={menuClass("cart")}>
-                <ShoppingCart size={18} /> Cart
+              <button
+                onClick={() => setCartOpen(true)}
+                className={menuClass("cart")}
+              >
+                <div className="relative flex items-center gap-3">
+
+                  <div className="relative">
+                    <ShoppingCart size={20} />
+
+                    {totalCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full shadow-md">
+                        {totalCount}
+                      </span>
+                    )}
+                  </div>
+
+                  <span>Cart</span>
+                </div>
               </button>
             </div>
           )}
@@ -184,8 +207,7 @@ const Sidebar = () => {
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === "manu" && <UserFoods />}
           {activeTab === "profile" && <Profile />}
-          {activeTab === "wishlist" && <div>Wishlist Content</div>}
-          {activeTab === "orders" && <div>Orders Content</div>}
+          {activeTab === "orders" && <MyOrders/>}
 
           {activeTab === "dashboard" && <AdminDashboard />}
           {activeTab === "manageUsers" && <ManageUser />}

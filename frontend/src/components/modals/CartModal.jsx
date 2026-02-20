@@ -5,7 +5,9 @@ import {
     removeItem,
     updateCartItem,
 } from "../../features/cartSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { checkoutOrder } from "../../features/orderSlice";
+import PaymentModal from "./PaymentModal";
 
 const CartModal = ({ onClose }) => {
     const dispatch = useDispatch();
@@ -14,6 +16,9 @@ const CartModal = ({ onClose }) => {
     useEffect(() => {
         dispatch(fetchCart());
     }, [dispatch]);
+
+    const [showPayment, setShowPayment] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState("");
 
     const items = cart?.items || [];
 
@@ -145,12 +150,19 @@ const CartModal = ({ onClose }) => {
                             </span>
                         </div>
 
-                        <button className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition">
-                            Checkout
+                        <button onClick={() => setShowPayment(true)}
+                            className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition">
+                            Place Order
                         </button>
                     </div>
                 )}
 
+                {showPayment && (
+                    <PaymentModal onClose={() => {
+                        setShowPayment(false);
+                        onClose();
+                    }} />
+                )}
             </div>
         </div>
     );

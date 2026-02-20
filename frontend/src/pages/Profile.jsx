@@ -59,10 +59,6 @@ const Profile = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
-                Update
-              </button>
-
               <button
                 onClick={handleDelete}
                 className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition"

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getSingleFood } from "../../features/userSlice";
+import { addToCart } from "../../features/cartSlice";
 
 const FoodDetails = () => {
   const { id } = useParams();
@@ -15,6 +16,7 @@ const FoodDetails = () => {
     dispatch(getSingleFood(id));
   }, [dispatch, id]);
 
+ 
   if (loading)
     return (
       <div className="p-10 text-center text-lg font-medium">
@@ -96,11 +98,7 @@ const FoodDetails = () => {
               </div>
             )}
 
-            {/* Button */}
-            <button className="w-full md:w-fit bg-red-500 text-white px-8 py-3 rounded-xl hover:bg-red-600 transition duration-300 shadow-md">
-              Add to Cart
-            </button>
-
+         
           </div>
         </div>
       </div>
