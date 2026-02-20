@@ -82,7 +82,7 @@ const FoodDetails = () => {
               </p>
             </div>
 
-            {/* Ingredients (Comma Separated) */}
+            {/* Ingredients */}
             {singleFood.ingredients && (
               <div>
                 <h2 className="text-lg font-semibold mb-2">

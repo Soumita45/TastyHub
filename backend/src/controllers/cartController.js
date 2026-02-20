@@ -206,6 +206,9 @@ export const removeCartItem = async (req, res) => {
 
         await cart.save();
 
+        // 🔥 VERY IMPORTANT
+        await cart.populate("items.food");
+
         res.status(200).json({
             message: "Item removed successfully",
             cart
@@ -217,3 +220,4 @@ export const removeCartItem = async (req, res) => {
         });
     }
 };
+

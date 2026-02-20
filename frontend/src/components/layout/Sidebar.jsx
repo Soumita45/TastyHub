@@ -9,6 +9,7 @@ import {
   X,
   Utensils,
   UtensilsCrossed,
+  ShoppingCart,
 } from "lucide-react";
 import { useState } from "react";
 import LogoutModal from "../modals/logoutModal";
@@ -18,10 +19,13 @@ import AdminDashboard from "../section/AdminDashboard";
 import AllOrder from "../food/AllOrder";
 import Foods from "../food/Foods";
 import UserFoods from "../../pages/UserFood";
+import CartModal from "../modals/CartModal";
+
 
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [logout, setLogout] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
   const role = localStorage.getItem("role");
   const name = localStorage.getItem("name");
@@ -90,7 +94,9 @@ const Sidebar = () => {
         {/* Header */}
         <div
           className={`p-4 border-b flex items-center gap-3 ${
-            isAdmin ? "bg-blue-700 text-white border-gray-700" : "bg-red-500 text-white"
+            isAdmin
+              ? "bg-blue-700 text-white border-gray-700"
+              : "bg-red-500 text-white"
           }`}
         >
           <div
@@ -116,64 +122,57 @@ const Sidebar = () => {
 
         {/* Navigation */}
         <nav className="flex-1 pt-6 px-3 overflow-y-auto">
-          {isAdmin && (
-            <p className="text-xs uppercase tracking-widest opacity-60 px-2 mb-4">
-              ADMIN PANEL
-            </p>
+          {role === "user" && (
+            <div className="flex flex-col gap-2">
+              <button onClick={() => setActiveTab("manu")} className={menuClass("manu")}>
+                <Utensils size={18} /> Menu
+              </button>
+
+              <button onClick={() => setActiveTab("profile")} className={menuClass("profile")}>
+                <User size={18} /> Profile
+              </button>
+
+              <button onClick={() => setActiveTab("wishlist")} className={menuClass("wishlist")}>
+                <Heart size={18} /> Wishlist
+              </button>
+
+              <button onClick={() => setActiveTab("orders")} className={menuClass("orders")}>
+                <ShoppingBag size={18} /> Orders
+              </button>
+
+             
+              <button onClick={() => setCartOpen(true)} className={menuClass("cart")}>
+                <ShoppingCart size={18} /> Cart
+              </button>
+            </div>
           )}
 
-          <div className="flex flex-col gap-2">
-            {role === "user" && (
-              <>
-                <button onClick={() => setActiveTab("manu")} className={menuClass("manu")}>
-                  <Utensils size={18} /> Menu
-                </button>
+          {role === "admin" && (
+            <div className="flex flex-col gap-2">
+              <button onClick={() => setActiveTab("dashboard")} className={menuClass("dashboard")}>
+                <LayoutDashboard size={18} /> Dashboard
+              </button>
 
-                <button onClick={() => setActiveTab("profile")} className={menuClass("profile")}>
-                  <User size={18} /> Profile
-                </button>
+              <button onClick={() => setActiveTab("manageUsers")} className={menuClass("manageUsers")}>
+                <Users size={18} /> Manage Users
+              </button>
 
-                <button onClick={() => setActiveTab("wishlist")} className={menuClass("wishlist")}>
-                  <Heart size={18} /> Wishlist
-                </button>
+              <button onClick={() => setActiveTab("manageOrders")} className={menuClass("manageOrders")}>
+                <ShoppingBag size={18} /> Manage Orders
+              </button>
 
-                <button onClick={() => setActiveTab("orders")} className={menuClass("orders")}>
-                  <ShoppingBag size={18} /> Orders
-                </button>
-              </>
-            )}
-
-            {role === "admin" && (
-              <>
-                <button onClick={() => setActiveTab("dashboard")} className={menuClass("dashboard")}>
-                  <LayoutDashboard size={18} /> Dashboard
-                </button>
-
-                <button onClick={() => setActiveTab("manageUsers")} className={menuClass("manageUsers")}>
-                  <Users size={18} /> Manage Users
-                </button>
-
-                <button onClick={() => setActiveTab("manageOrders")} className={menuClass("manageOrders")}>
-                  <ShoppingBag size={18} /> Manage Orders
-                </button>
-
-                <button onClick={() => setActiveTab("AddFoods")} className={menuClass("AddFoods")}>
-                  <UtensilsCrossed size={18} /> Add Foods
-                </button>
-              </>
-            )}
-          </div>
+              <button onClick={() => setActiveTab("AddFoods")} className={menuClass("AddFoods")}>
+                <UtensilsCrossed size={18} /> Add Foods
+              </button>
+            </div>
+          )}
         </nav>
 
         {/* Logout */}
         <div className="p-4 border-t border-gray-700">
           <button
             onClick={() => setLogout(true)}
-            className={`w-full flex items-center gap-3 p-3 rounded-lg transition ${
-              isAdmin
-                ? "text-red-400 hover:bg-red-500 hover:text-white"
-                : "text-red-500 hover:bg-red-500 hover:text-white"
-            }`}
+            className="w-full flex items-center gap-3 p-3 rounded-lg text-red-500 hover:bg-red-500 hover:text-white transition"
           >
             <LogOut size={18} /> Logout
           </button>
@@ -183,7 +182,7 @@ const Sidebar = () => {
       {/* MAIN CONTENT */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <div className="flex-1 overflow-y-auto p-6">
-          {activeTab === "manu" && <UserFoods/>}
+          {activeTab === "manu" && <UserFoods />}
           {activeTab === "profile" && <Profile />}
           {activeTab === "wishlist" && <div>Wishlist Content</div>}
           {activeTab === "orders" && <div>Orders Content</div>}
@@ -196,6 +195,7 @@ const Sidebar = () => {
       </div>
 
       {logout && <LogoutModal onCancle={() => setLogout(false)} />}
+      {cartOpen && <CartModal onClose={() => setCartOpen(false)} />}
     </div>
   );
 };
