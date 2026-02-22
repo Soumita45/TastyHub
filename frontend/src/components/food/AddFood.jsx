@@ -165,7 +165,7 @@ const AddFood = () => {
           <button
             type="submit"
             disabled={loading}
-            className="md:col-span-2 bg-blue-500 hover:bg-blue-600 text-white  py-1  text-sm rounded-md transition"
+            className="md:col-span-2 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1  text-sm rounded-md transition"
           >
             {loading ? "Uploading..." : "Add Food"}
           </button>

@@ -24,11 +24,11 @@ const foodSchema = new mongoose.Schema({
         enum: ["veg", "non-veg"],
         required: true
     },
-    ingredients: [
-        {
-            type: String
-        }
-    ],
+     ingredients: {
+      type: [String],  
+      default: []
+    },
+
     image: {
         type: String,
         default:null

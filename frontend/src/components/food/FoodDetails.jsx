@@ -16,7 +16,7 @@ const FoodDetails = () => {
     dispatch(getSingleFood(id));
   }, [dispatch, id]);
 
- 
+
   if (loading)
     return (
       <div className="p-10 text-center text-lg font-medium">
@@ -90,15 +90,18 @@ const FoodDetails = () => {
                 <h2 className="text-lg font-semibold mb-2">
                   Ingredients
                 </h2>
-                <p className="text-gray-600 leading-relaxed">
-                  {Array.isArray(singleFood.ingredients)
-                    ? singleFood.ingredients.join(", ")
-                    : singleFood.ingredients}
-                </p>
+
+                <ul className="list-disc list-inside text-gray-600 space-y-1">
+                  {(Array.isArray(singleFood.ingredients)
+                    ? singleFood.ingredients
+                    : JSON.parse(singleFood.ingredients || "[]")
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
               </div>
             )}
 
-         
           </div>
         </div>
       </div>

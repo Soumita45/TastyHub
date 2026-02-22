@@ -56,7 +56,7 @@ const AllOrder = () => {
                   <td className="border p-3">
                     {order.items.map((item, index) => (
                       <div key={index}>
-                        {item.food?.name} x {item.quantity}
+                        {item.food?.name}  {item.quantity}
                       </div>
                     ))}
                   </td>
@@ -101,7 +101,7 @@ const AllOrder = () => {
               <p className="font-medium mb-1">Items:</p>
               {order.items.map((item, index) => (
                 <div key={index}>
-                  {item.food?.name} x {item.quantity}
+                  {item.food?.name}  {item.quantity}
                 </div>
               ))}
             </div>
