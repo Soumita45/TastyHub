@@ -31,20 +31,7 @@ const Hero = () => {
 
                         </div>
 
-                        {/* Features */}
-                        <div className="grid grid-cols-3 gap-4 pt-8">
-
-                            <div className="text-center p-4 bg-white rounded-lg border border-red-100">
-                                <div className="text-2xl font-bold text-red-600">500K+</div>
-                                <div className="text-sm text-gray-600 mt-1">Users</div>
-                            </div>
-
-                            <div className="text-center p-4 bg-white rounded-lg border border-red-100">
-                                <div className="text-2xl font-bold text-red-600">1M+</div>
-                                <div className="text-sm text-gray-600 mt-1">Orders</div>
-                            </div>
-
-                        </div>
+                       
                     </div>
 
                     {/* Right side - Image */}

@@ -70,7 +70,6 @@ const AddFood = () => {
         image: null,
       });
 
-      // Reset file input manually
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }

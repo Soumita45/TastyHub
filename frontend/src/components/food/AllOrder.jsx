@@ -27,7 +27,7 @@ const AllOrder = () => {
         <p className="text-gray-500">No orders found</p>
       )}
 
-      {/* ================= DESKTOP TABLE ================= */}
+      {/*  DESKTOP TABLE  */}
       <div className="hidden md:block bg-white rounded-lg shadow border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
@@ -56,7 +56,7 @@ const AllOrder = () => {
                   <td className="border p-3">
                     {order.items.map((item, index) => (
                       <div key={index}>
-                        {item.food?.name} × {item.quantity}
+                        {item.food?.name} x {item.quantity}
                       </div>
                     ))}
                   </td>
@@ -81,7 +81,7 @@ const AllOrder = () => {
         </div>
       </div>
 
-      {/* ================= MOBILE CARD VIEW ================= */}
+      {/*  MOBILE CARD VIEW  */}
       <div className="md:hidden space-y-4">
         {orders.map((order) => (
           <div
@@ -101,7 +101,7 @@ const AllOrder = () => {
               <p className="font-medium mb-1">Items:</p>
               {order.items.map((item, index) => (
                 <div key={index}>
-                  {item.food?.name} × {item.quantity}
+                  {item.food?.name} x {item.quantity}
                 </div>
               ))}
             </div>

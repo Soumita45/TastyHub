@@ -46,7 +46,7 @@ const MyOrders = () => {
                                     <span>
                                         {item.food?.name || item.name}
                                     </span>
-                                    <span>× {item.quantity}</span>
+                                    <span> {item.quantity}</span>
                                 </div>
                             ))}
                         </div>
