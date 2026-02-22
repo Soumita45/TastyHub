@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { loginSchema } from "../components/validation/validation";
+
 
 const Login = ({ onClose, switchToRegister }) => {
     const [email, setEmail] = useState("");
@@ -13,8 +16,15 @@ const Login = ({ onClose, switchToRegister }) => {
         e.preventDefault();
 
         try {
+            // ✅ 1. Frontend Validation (Yup)
+            await loginSchema.validate(
+                { email, password },
+                { abortEarly: false }
+            );
+
             setLoading(true);
 
+            // ✅ 2. Backend API Call
             const res = await axios.post(
                 "http://localhost:8000/user/login",
                 { email, password }
@@ -22,31 +32,49 @@ const Login = ({ onClose, switchToRegister }) => {
 
             const data = res.data;
 
-            // ✅ Save Data
+            // ✅ 3. Save tokens & user info
             localStorage.setItem("accessToken", data.accessToken);
             localStorage.setItem("refreshToken", data.refreshToken);
             localStorage.setItem("name", data.user.name);
             localStorage.setItem("email", data.user.email);
             localStorage.setItem("role", data.user.role);
 
+            // ✅ 4. Backend Success Message Show
+            toast.success(data.message || "Login successful");
+
             const role = data.user.role;
 
-            // Close modal
+            // Modal close
             if (onClose) onClose();
 
-            // 🔥 Role Based Redirect
-            if (role === "admin") {
-                navigate("/admin/dashboard", { replace: true });
-            } else {
-                navigate("/menu", { replace: true });
-            }
+            // Small delay for better UX
+            setTimeout(() => {
+                if (role === "admin") {
+                    navigate("/admin/dashboard", { replace: true });
+                } else {
+                    navigate("/menu", { replace: true });
+                }
+            }, 1000);
 
         } catch (error) {
-            if (error.response) {
-                alert(error.response.data.message);
-            } else {
-                alert("Server error");
+
+            // ✅ Yup Validation Error (Frontend)
+            if (error.name === "ValidationError") {
+                error.inner.forEach((err) => {
+                    toast.error(err.message);
+                });
             }
+
+            // ✅ Backend Error Message
+            else if (error.response) {
+                toast.error(error.response.data.message || "Login failed");
+            }
+
+            // ✅ Network / Server Error
+            else {
+                toast.error("Server error, please try again");
+            }
+
         } finally {
             setLoading(false);
         }
@@ -75,7 +103,6 @@ const Login = ({ onClose, switchToRegister }) => {
                             className="w-full mb-3 p-3 border rounded"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            required
                         />
 
                         <input
@@ -84,7 +111,6 @@ const Login = ({ onClose, switchToRegister }) => {
                             className="w-full mb-4 p-3 border rounded"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required
                         />
 
                         <button

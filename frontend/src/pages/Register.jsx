@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Register = ({ onClose, switchToLogin }) => {
     const [name, setName] = useState("");
@@ -17,15 +18,19 @@ const Register = ({ onClose, switchToLogin }) => {
             );
 
             if (res.data.success) {
-                alert("Registration Successful ✅");
-
-                onClose();         // close register modal
-                switchToLogin();   // open login modal
+                toast.success(res.data.message || "Registration Successful");
+                
+                onClose();
+                
+                setTimeout(() => {
+                    switchToLogin();
+                }, 800);
             }
 
         } catch (error) {
-            console.error(error.response?.data || error.message);
-            console.log(error.response?.data?.message || "Registration Failed");
+            toast.error(
+                error.response?.data?.message || "Registration Failed"
+            );
         } finally {
             setLoading(false);
         }
@@ -53,7 +58,6 @@ const Register = ({ onClose, switchToLogin }) => {
                         </p>
                     </div>
 
-                    {/* Username */}
                     <input
                         type="text"
                         placeholder="Username"
@@ -62,7 +66,6 @@ const Register = ({ onClose, switchToLogin }) => {
                         className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500"
                     />
 
-                    {/* Email */}
                     <input
                         type="email"
                         placeholder="Email"
@@ -71,7 +74,6 @@ const Register = ({ onClose, switchToLogin }) => {
                         className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500"
                     />
 
-                    {/* Password */}
                     <input
                         type="password"
                         placeholder="Password"
@@ -80,7 +82,6 @@ const Register = ({ onClose, switchToLogin }) => {
                         className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500"
                     />
 
-                    {/* Sign Up Button */}
                     <button
                         onClick={handleRegister}
                         disabled={loading}

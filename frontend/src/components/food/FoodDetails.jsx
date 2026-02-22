@@ -50,7 +50,7 @@ const FoodDetails = () => {
             <img
               src={singleFood.image}
               alt={singleFood.name}
-              className="w-full max-h-[450px] object-cover rounded-xl shadow-md"
+              className="w-full max-h-[390px] object-cover rounded-xl shadow-md"
             />
           </div>
 

@@ -42,7 +42,7 @@ const App = () => {
           <Route path="users" element={<ManageUser />} />
           <Route path="orders" element={<AllOrder />} />
           <Route path="add-food" element={<Foods />} />
-          <Route path="addFood" element={<AddFood />} />
+           <Route path="addFood" element={<AddFood />} />
         </Route>
 
       </Routes>

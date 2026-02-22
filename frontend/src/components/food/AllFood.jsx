@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteFoods, getAllFoods } from "../../features/adminSlice";
+import { getAllFoods } from "../../features/adminSlice";
 import UpdateFoodModal from "../modals/UpdateModal";
+import DeleteFoodModal from "../modals/DeleteFoodModal";
 
 const AllFood = () => {
     const dispatch = useDispatch();
@@ -21,9 +22,7 @@ const AllFood = () => {
         dispatch(getAllFoods({ page, search, foodType }));
     }, [dispatch, page, search, foodType]);
 
-    const handleDelete = (id) => {
-        dispatch(deleteFoods(id));
-    };
+    const [deleteId, setDeleteId] = useState(null);
 
     const handleUpdate = (food) => {
         setSelectedFood(food);
@@ -54,7 +53,7 @@ const AllFood = () => {
                         className="border p-2 rounded text-sm"
                     />
 
-                  
+
 
                     <select
                         value={foodType}
@@ -119,7 +118,7 @@ const AllFood = () => {
                                     </button>
 
                                     <button
-                                        onClick={() => handleDelete(food._id)}
+                                        onClick={() => setDeleteId(food._id)}
                                         className="flex-1 px-2 py-1 bg-red-500 text-white rounded text-xs"
                                     >
                                         Delete
@@ -183,7 +182,7 @@ const AllFood = () => {
                                                 </button>
 
                                                 <button
-                                                    onClick={() => handleDelete(food._id)}
+                                                    onClick={() => setDeleteId(food._id)}
                                                     className="px-2 py-1 bg-red-500 text-white rounded text-xs"
                                                 >
                                                     Delete
@@ -239,7 +238,8 @@ const AllFood = () => {
                     onClose={() => setIsModalOpen(false)}
                     food={selectedFood}
                 />
-
+                {deleteId && (<DeleteFoodModal foodId={deleteId}
+                    onClose={() => setDeleteId(null)} />)}
             </div>
         </div>
     );
