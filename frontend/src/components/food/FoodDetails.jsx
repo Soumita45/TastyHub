@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getSingleFood } from "../../features/userSlice";
-import { addToCart } from "../../features/cartSlice";
+
 
 const FoodDetails = () => {
   const { id } = useParams();
@@ -91,14 +91,12 @@ const FoodDetails = () => {
                   Ingredients
                 </h2>
 
-                <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <p className="text-gray-600 leading-relaxed">
                   {(Array.isArray(singleFood.ingredients)
                     ? singleFood.ingredients
                     : JSON.parse(singleFood.ingredients || "[]")
-                  ).map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
+                  ).join(", ")}
+                </p>
               </div>
             )}
 

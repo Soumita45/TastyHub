@@ -6,7 +6,7 @@ const UserLayout = () => {
   return (
     <div className="flex ">
       <UserSidebar />
-      <div className="flex-1 lg:ml-70 min-h-screen overflow-y-auto">
+      <div className="flex-1 lg:ml-72 p-6 overflow-y-auto h-screen">
         <Outlet />
       </div>
     </div>

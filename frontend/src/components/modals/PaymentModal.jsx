@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { checkoutOrder } from "../../features/orderSlice";
 import { fetchCart } from "../../features/cartSlice";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 
 const PaymentModal = ({ onClose }) => {
     const dispatch = useDispatch();
@@ -30,7 +30,12 @@ const PaymentModal = ({ onClose }) => {
 
     return (
         <div className="absolute inset-0 bg-white p-6 flex flex-col justify-center">
-
+            <button
+                onClick={onClose}
+                className="absolute top-4 right-4 text-gray-500 hover:text-black"
+            >
+                <X size={22} />
+            </button>
             {!success ? (
                 <>
                     <h2 className="text-lg font-semibold mb-4 text-center">

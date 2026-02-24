@@ -1,20 +1,17 @@
 import { X, Plus, Minus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchCart,
   removeItem,
   updateCartItem,
 } from "../../features/cartSlice";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PaymentModal from "./PaymentModal";
 
 const CartModal = ({ onClose }) => {
   const dispatch = useDispatch();
-  const { cart, loading } = useSelector((state) => state.cart);
 
-  useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+
+  const { cart, loading } = useSelector((state) => state.cart);
 
   const [showPayment, setShowPayment] = useState(false);
 
@@ -59,7 +56,6 @@ const CartModal = ({ onClose }) => {
           <div className="flex-1 overflow-y-auto flex flex-col gap-4">
 
             {items.map((item) => {
-
               if (!item.food) return null;
 
               const price = item.food.price;
@@ -72,11 +68,10 @@ const CartModal = ({ onClose }) => {
                   className="border border-gray-200 bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition"
                 >
 
-                  {/* 🔥 Image + Name Section */}
+                  {/* Image + Name */}
                   <div className="flex gap-3">
-
                     <img
-                      src={item.food.image || "https://via.placeholder.com/70"}
+                      src={item.food.image }
                       alt={item.food.name}
                       className="w-16 h-16 object-cover rounded-md border"
                     />
@@ -90,12 +85,10 @@ const CartModal = ({ onClose }) => {
                         ₹{price} × {quantity}
                       </p>
                     </div>
-
                   </div>
 
                   {/* Quantity Controls */}
                   <div className="flex items-center justify-between mt-3">
-
                     <div className="flex items-center gap-2">
 
                       <button
@@ -130,7 +123,6 @@ const CartModal = ({ onClose }) => {
                       >
                         <Plus size={14} />
                       </button>
-
                     </div>
 
                     <p className="text-sm font-semibold text-indigo-600">
@@ -151,7 +143,6 @@ const CartModal = ({ onClose }) => {
                 </div>
               );
             })}
-
           </div>
         )}
 

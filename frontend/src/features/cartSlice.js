@@ -50,8 +50,9 @@ export const removeItem = createAsyncThunk(
         try {
             const token = localStorage.getItem("accessToken");
 
-            const { data } = await axios.delete( `${API}/cart/removeCartItem`, 
-                { data: { foodId },
+            const { data } = await axios.delete(`${API}/cart/removeCartItem`,
+                {
+                    data: { foodId },
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
@@ -95,57 +96,57 @@ const cartSlice = createSlice({
     },
     reducers: {},
     extraReducers: (builder) => {
-    builder
-        //  FETCH CART
-        .addCase(fetchCart.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(fetchCart.fulfilled, (state, action) => {
-            state.loading = false;
-            state.cart = action.payload;
-        })
-        .addCase(fetchCart.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        })
+        builder
+            //  FETCH CART
+            .addCase(fetchCart.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchCart.fulfilled, (state, action) => {
+                state.loading = false;
+                state.cart = action.payload;
+            })
+            .addCase(fetchCart.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
 
-        //  ADD TO CART
-        .addCase(addToCart.fulfilled, (state, action) => {
-            state.cart = action.payload;
-        })
+            //  ADD TO CART
+            .addCase(addToCart.fulfilled, (state, action) => {
+                state.cart = action.payload;
+            })
 
-        // REMOVE ITEM
-        .addCase(removeItem.fulfilled, (state, action) => {
-            state.cart = action.payload;
-        })
+            // REMOVE ITEM
+            .addCase(removeItem.fulfilled, (state, action) => {
+                state.cart = action.payload;
+            })
 
-        //  UPDATE CART (OPTIMISTIC UPDATE)
-        .addCase(updateCartItem.pending, (state, action) => {
-            const { foodId, type } = action.meta.arg;
+            //  UPDATE CART 
+            .addCase(updateCartItem.pending, (state, action) => {
+                const { foodId, type } = action.meta.arg;
 
-            const item = state.cart?.items?.find(
-                (i) => i.food._id === foodId
-            );
-
-            if (item) {
-                if (type === "inc") item.quantity += 1;
-                if (type === "dec" && item.quantity > 1)
-                    item.quantity -= 1;
-            }
-
-            // totalPrice locally calculate
-            if (state.cart) {
-                state.cart.totalPrice = state.cart.items.reduce(
-                    (acc, item) =>
-                        acc + item.food.price * item.quantity,
-                    0
+                const item = state.cart?.items?.find(
+                    (i) => i.food._id === foodId
                 );
-            }
-        })
-        .addCase(updateCartItem.rejected, (state, action) => {
-            state.error = action.payload;
-        });
-}
+
+                if (item) {
+                    if (type === "inc") item.quantity += 1;
+                    if (type === "dec" && item.quantity > 1)
+                        item.quantity -= 1;
+                }
+
+                // totalPrice locally calculate
+                if (state.cart) {
+                    state.cart.totalPrice = state.cart.items.reduce(
+                        (acc, item) =>
+                            acc + item.food.price * item.quantity,
+                        0
+                    );
+                }
+            })
+            .addCase(updateCartItem.rejected, (state, action) => {
+                state.error = action.payload;
+            });
+    }
 
 });
 

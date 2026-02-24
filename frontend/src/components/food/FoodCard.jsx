@@ -1,12 +1,26 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../features/cartSlice";
 
 const FoodCard = ({ food, onClick }) => {
     const dispatch = useDispatch();
 
+
+    const items = useSelector(
+        (state) => state.cart.cart?.items || []
+    );
+
+
+    const isAlreadyInCart = items.some(
+        (item) => item.food?._id === food?._id
+    );
+
     const handleAddToCart = () => {
         if (!food?._id) return;
+
+        if (isAlreadyInCart) {
+            return; // duplicate block
+        }
 
         dispatch(
             addToCart({
@@ -48,9 +62,13 @@ const FoodCard = ({ food, onClick }) => {
 
                     <button
                         onClick={handleAddToCart}
-                        className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition active:scale-95"
+                        disabled={isAlreadyInCart}
+                        className={`px-3 py-1 rounded text-sm transition active:scale-95 
+            ${isAlreadyInCart
+                                ? "bg-gray-400 cursor-not-allowed text-white"
+                                : "bg-red-500 text-white hover:bg-red-600"}`}
                     >
-                        Add to Cart
+                        {isAlreadyInCart ? "Added" : "Add to Cart"}
                     </button>
                 </div>
             </div>

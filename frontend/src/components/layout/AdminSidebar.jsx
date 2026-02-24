@@ -53,7 +53,7 @@ const AdminSidebar = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:relative z-50 h-screen w-64 bg-gray-950 text-gray-200 border-r border-gray-800 transition-transform duration-300
+        className={`fixed  z-50 h-screen w-64 bg-gray-950 text-gray-200 border-r border-gray-800 transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         {/* Header */}
