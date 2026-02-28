@@ -6,7 +6,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import AddFood from "./components/food/AddFood"
 import FoodDetails from "./components/food/FoodDetails";
 
-import UserFoods from "./pages/UserFood";
+
 import Profile from "./pages/Profile";
 import MyOrders from "./components/food/MyOrder";
 
@@ -16,6 +16,7 @@ import AllOrder from "./components/food/AllOrder";
 import Foods from "./components/food/Foods";
 import UserLayout from "./components/layouts/UserLayout";
 import AdminLayout from "./components/layouts/AdminLayout";
+import UserFoods from "./components/food/UserFood";
 
 
 

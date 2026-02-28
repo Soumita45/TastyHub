@@ -43,9 +43,15 @@ export const getDashboardStats = createAsyncThunk("admin/getDashboardStats", asy
 export const getAllFoods = createAsyncThunk("admin/getAllFoods",
     async ({ page = 1, search = "", category = "", foodType = "" }, { rejectWithValue }) => {
         try {
+              const token = localStorage.getItem("accessToken");
             const res = await axios.get(
                 `${API}/food/getAllFood?page=${page}&search=${search}&category=${category}&foodType=${foodType}`,
-            );
+            
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
             console.log(res)
             return res.data;
         } catch (error) {
@@ -73,6 +79,7 @@ export const deleteFoods = createAsyncThunk("food/deleteFood", async (id, { reje
 }
 );
 
+//fatchAllOrders
 export const fetchAllOrders = createAsyncThunk("orders/fetchAllOrders", async (_, { rejectWithValue }) => {
     try {
         const token = localStorage.getItem("accessToken");
@@ -93,6 +100,7 @@ export const fetchAllOrders = createAsyncThunk("orders/fetchAllOrders", async (_
 }
 );
 
+//addFood
 export const addFood = createAsyncThunk("food/addFood", async (formData, { rejectWithValue }) => {
     try {
         const token = localStorage.getItem("accessToken");
@@ -122,6 +130,7 @@ export const addFood = createAsyncThunk("food/addFood", async (formData, { rejec
 }
 );
 
+//updateFood
 export const updateFood = createAsyncThunk("admin/updateFood",
     async ({ id, data }, { rejectWithValue }) => {
         try {

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FoodCard from "../components/food/FoodCard";
-import { getAllFoods } from "../features/adminSlice";
+
+import FoodCard from "./FoodCard";
+import { getAllFoods } from "../../features/adminSlice";
 
 const UserFoods = () => {
     const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const UserFoods = () => {
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
 
-            {/* 🔍 Search + Filters */}
+            {/*  Search + Filters */}
             <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-wrap gap-4 items-center">
 
                 {/* Search */}
@@ -62,15 +63,15 @@ const UserFoods = () => {
 
             </div>
 
-            {/* ⏳ Loading */}
+            {/*  Loading */}
             {loading && <p className="text-center">Loading foods...</p>}
 
-            {/* 🍽 Empty */}
+            {/* Empty */}
             {!loading && foods.length === 0 && (
                 <p className="text-center text-gray-500">No foods found</p>
             )}
 
-            {/* 🍽 Food Grid */}
+            {/* Food Grid */}
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {foods.map((food) => (
                     <FoodCard
@@ -81,18 +82,17 @@ const UserFoods = () => {
                 ))}
             </div>
 
-            {/* 📄 Pagination */}
+            {/* Pagination */}
             {totalPages > 1 && (
                 <div className="flex justify-center items-center gap-4 mt-8">
 
                     <button
                         onClick={handlePrev}
                         disabled={page === 1}
-                        className={`px-4 py-2 rounded ${
-                            page === 1
+                        className={`px-4 py-2 rounded ${page === 1
                                 ? "bg-gray-300 cursor-not-allowed"
                                 : "bg-red-500 text-white hover:bg-red-600"
-                        }`}
+                            }`}
                     >
                         Previous
                     </button>
@@ -104,11 +104,10 @@ const UserFoods = () => {
                     <button
                         onClick={handleNext}
                         disabled={page === totalPages}
-                        className={`px-4 py-2 rounded ${
-                            page === totalPages
+                        className={`px-4 py-2 rounded ${page === totalPages
                                 ? "bg-gray-300 cursor-not-allowed"
                                 : "bg-red-500 text-white hover:bg-red-600"
-                        }`}
+                            }`}
                     >
                         Next
                     </button>

@@ -14,7 +14,6 @@ const Navbar = () => {
 
                         {/* Logo Section */}
                         <div className="flex items-center gap-2">
-                            <div className="text-3xl">🍜</div>
                             <span className="text-2xl font-bold text-red-500">
                                 TastyHub
                             </span>

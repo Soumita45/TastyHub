@@ -43,11 +43,17 @@ export const deleteUser = createAsyncThunk("user/deleteUser", async (_, { reject
 }
 );
 
+//getSingleFood
 export const getSingleFood = createAsyncThunk(
     "food/getSingleFood",
     async (id, { rejectWithValue }) => {
         try {
-            const res = await axios.get(`${API}/food/getSingleFood/${id}`);
+              const token = localStorage.getItem("accessToken");
+            const res = await axios.get(`${API}/food/getSingleFood/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
             return res.data.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message);

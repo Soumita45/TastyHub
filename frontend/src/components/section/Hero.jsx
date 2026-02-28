@@ -21,17 +21,7 @@ const Hero = () => {
                             Made to delight your taste buds, every single time.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                                <button className="bg-red-600 hover:bg-red-500 text-white font-medium px-8 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
-                                    Get Started
-                                </button>
-                            <button className="bg-white hover:bg-red-50 text-red-600 border-2 border-red-600 font-medium px-8 py-3 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
-                                Explore Menu
-                            </button>
 
-                        </div>
-
-                       
                     </div>
 
                     {/* Right side - Image */}
