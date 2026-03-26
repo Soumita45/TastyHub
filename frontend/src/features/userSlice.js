@@ -23,7 +23,6 @@ export const getUser = createAsyncThunk("user/getUser", async (_, { rejectWithVa
 }
 );
 
-
 // Delete User
 export const deleteUser = createAsyncThunk("user/deleteUser", async (_, { rejectWithValue }) => {
     try {
@@ -90,7 +89,7 @@ const userSlice = createSlice({
             // DELETE USER
             .addCase(deleteUser.fulfilled, (state) => {
                 state.user = null;
-                localStorage.removeItem("token");
+                localStorage.removeItem("accessToken");
             })
             // GET SINGLE FOOD
             .addCase(getSingleFood.pending, (state) => {

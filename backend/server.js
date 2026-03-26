@@ -4,7 +4,6 @@ import { dbConnection } from "./src/config/dbConnection.js";
 import userRoute from "./src/routes/userRoute.js";
 import cors from "cors"
 import foodRoute from "./src/routes/foodRoute.js";
-import { upload } from "./src/controllers/multerController.js";
 import cartRoute from "./src/routes/cartRoute.js";
 import orderRoute from "./src/routes/orderRoute.js";
 ;
@@ -17,7 +16,6 @@ dbConnection()
 
 app.use(cors())
 app.use(express.json())
-app.use("/uploads", express.static("upload"))
 app.use("/user",userRoute)
 app.use("/food",foodRoute)
 app.use("/cart",cartRoute)

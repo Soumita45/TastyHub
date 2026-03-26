@@ -231,6 +231,7 @@ export const getAllUser = async (req, res) => {
     }
 };
 
+//total
 export const getTotal = async (req, res) => {
   try {
 

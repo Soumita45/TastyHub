@@ -19,9 +19,9 @@ const Register = ({ onClose, switchToLogin }) => {
 
             if (res.data.success) {
                 toast.success(res.data.message || "Registration Successful");
-                
+
                 onClose();
-                
+
                 setTimeout(() => {
                     switchToLogin();
                 }, 800);

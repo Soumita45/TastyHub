@@ -14,20 +14,20 @@ const Profile = () => {
   }, [dispatch]);
 
   const handleDelete = async () => {
-  try {
-    await dispatch(deleteUser()).unwrap();
-    
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("name");
-    localStorage.removeItem("email");
+    try {
+      await dispatch(deleteUser()).unwrap();
 
-    navigate("/");
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("name");
+      localStorage.removeItem("email");
 
-  } catch (error) {
-    console.log(error);
-  }
-};
+      navigate("/");
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
@@ -49,7 +49,7 @@ const Profile = () => {
                   {user.name}
                 </p>
               </div>
-              
+
               <div>
                 <p className="text-sm text-gray-500">Email</p>
                 <p className="text-sm sm:text-base text-gray-700 break-words">

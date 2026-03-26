@@ -37,7 +37,10 @@ export const addToCart = async (req, res) => {
         );
 
         if (existingItem) {
-            existingItem.quantity += quantity;
+            return res.status(400).json({
+                success: false,
+                message: "Food already in cart"
+            });
         } else {
             cart.items.push({
                 food: foodId,

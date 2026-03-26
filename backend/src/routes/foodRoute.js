@@ -2,7 +2,7 @@ import express from "express"
 import { hashToken } from "../middleware/hashToken.js"
 import { addFoodSchema, Validate } from "../utils/validation.js"
 import { addFood, changeAvailability, deleteFood, getAllFood, getSingleFood, updateFood } from "../controllers/foodContoller.js"
-import { upload } from "../controllers/multerController.js"
+import { upload } from "../middleware/upload.js"
 
 const foodRoute = express.Router()
 

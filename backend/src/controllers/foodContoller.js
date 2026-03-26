@@ -1,6 +1,8 @@
 import foodSchema from "../models/foodSchema.js";
 import path from "path"
 import fs from "fs"
+import cloudinary from "../config/cloudinary.js";
+
 
 export const addFood = async (req, res) => {
   try {
@@ -57,7 +59,6 @@ export const addFood = async (req, res) => {
       });
     }
 
-
     if (ingredients && typeof ingredients === "string") {
       try {
         ingredients = JSON.parse(ingredients);
@@ -66,7 +67,8 @@ export const addFood = async (req, res) => {
       }
     }
 
-    const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+    
+    const imageUrl = req.file.path;
 
     const food = await foodSchema.create({
       name,
@@ -255,7 +257,7 @@ export const updateFood = async (req, res) => {
 
     let updateData = { ...req.body };
 
-  
+    // ingredients parse
     if (updateData.ingredients && typeof updateData.ingredients === "string") {
       try {
         updateData.ingredients = JSON.parse(updateData.ingredients);
@@ -267,25 +269,40 @@ export const updateFood = async (req, res) => {
       }
     }
 
+    // If new image uploaded
     if (req.file) {
 
+      // Delete old image from Cloudinary
       if (existingFood.image) {
-        const fileName = existingFood.image.split("/").pop();
-        const oldPath = path.join("uploads", fileName);
 
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
+        try {
+          const publicId =
+            existingFood.image
+              .split("/")
+              .slice(-1)[0]
+              .split(".")[0];
+
+          await cloudinary.uploader.destroy(publicId);
+
+        } catch (error) {
+          console.log("Error deleting old image:", error);
         }
+
       }
 
-      updateData.image = `http://localhost:8000/uploads/${req.file.filename}`;
+      // Save new Cloudinary image URL
+      updateData.image = req.file.path;
     }
 
-    const updatedFood = await foodSchema.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true, runValidators: true }
-    );
+    const updatedFood =
+      await foodSchema.findByIdAndUpdate(
+        id,
+        updateData,
+        {
+          new: true,
+          runValidators: true
+        }
+      );
 
     res.status(200).json({
       success: true,

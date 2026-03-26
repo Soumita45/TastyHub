@@ -1,12 +1,4 @@
-import {
-  LayoutDashboard,
-  Users,
-  ShoppingBag,
-  LogOut,
-  Menu,
-  X,
-  UtensilsCrossed,
-} from "lucide-react";
+import { LayoutDashboard, Users, ShoppingBag, LogOut, Menu, X, UtensilsCrossed, } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import LogoutModal from "../modals/logoutModal";
@@ -21,16 +13,15 @@ const AdminSidebar = () => {
   const getInitials = (name = "") =>
     name?.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
-  // 🔥 Base Nav Style
+  //  Base Nav Style
   const baseNav =
     "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200";
 
-  // 🔥 Reusable Active Class
+  //  Reusable Active Class
   const getNavClass = ({ isActive }) =>
-    `${baseNav} ${
-      isActive
-        ? "bg-blue-600 text-white shadow"
-        : "text-gray-300 hover:bg-gray-800 hover:text-white"
+    `${baseNav} ${isActive
+      ? "bg-blue-600 text-white shadow"
+      : "text-gray-300 hover:bg-gray-800 hover:text-white"
     }`;
 
   return (

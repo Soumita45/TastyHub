@@ -16,7 +16,7 @@ const Login = ({ onClose, switchToRegister }) => {
         e.preventDefault();
 
         try {
-            // ✅ 1. Frontend Validation (Yup)
+            //  1. Frontend Validation (Yup)
             await loginSchema.validate(
                 { email, password },
                 { abortEarly: false }
@@ -24,7 +24,7 @@ const Login = ({ onClose, switchToRegister }) => {
 
             setLoading(true);
 
-            // ✅ 2. Backend API Call
+            //  2. Backend API Call
             const res = await axios.post(
                 "http://localhost:8000/user/login",
                 { email, password }
@@ -32,14 +32,14 @@ const Login = ({ onClose, switchToRegister }) => {
 
             const data = res.data;
 
-            // ✅ 3. Save tokens & user info
+            //  3. Save tokens & user info
             localStorage.setItem("accessToken", data.accessToken);
             localStorage.setItem("refreshToken", data.refreshToken);
             localStorage.setItem("name", data.user.name);
             localStorage.setItem("email", data.user.email);
             localStorage.setItem("role", data.user.role);
 
-            // ✅ 4. Backend Success Message Show
+            //  4. Backend Success Message Show
             toast.success(data.message || "Login successful");
 
             const role = data.user.role;
@@ -58,19 +58,19 @@ const Login = ({ onClose, switchToRegister }) => {
 
         } catch (error) {
 
-            // ✅ Yup Validation Error (Frontend)
+            //  Yup Validation Error 
             if (error.name === "ValidationError") {
                 error.inner.forEach((err) => {
                     toast.error(err.message);
                 });
             }
 
-            // ✅ Backend Error Message
+            //  Backend Error Message
             else if (error.response) {
                 toast.error(error.response.data.message || "Login failed");
             }
 
-            // ✅ Network / Server Error
+            //  Network / Server Error
             else {
                 toast.error("Server error, please try again");
             }
