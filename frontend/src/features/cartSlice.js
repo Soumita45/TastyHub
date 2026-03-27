@@ -1,91 +1,106 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const API = "http://localhost:8000";
 
-// GET CART
 export const fetchCart = createAsyncThunk(
     "cart/fetchCart",
     async (_, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("accessToken");
 
-            const { data } = await axios.get(`${API}/cart/getCart`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const { data } = await axios.get(
+                `${API}/cart/getCart`,
+                {
+                    withCredentials: true
+                }
+            );
 
             return data.cart;
+
         } catch (error) {
-            return rejectWithValue(error.response.data);
+
+            return rejectWithValue(
+                error.response?.data
+            );
+
         }
     }
 );
 
-// ADD TO CART
 export const addToCart = createAsyncThunk(
     "cart/addToCart",
     async ({ foodId, quantity }, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("accessToken");
 
             const { data } = await axios.post(
                 `${API}/cart/addToCart`,
                 { foodId, quantity },
                 {
-                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true
                 }
             );
 
             return data.cart;
+
         } catch (error) {
-            return rejectWithValue(error.response.data);
+
+            return rejectWithValue(
+                error.response?.data
+            );
+
         }
     }
 );
 
-//  REMOVE ITEM
 export const removeItem = createAsyncThunk(
     "cart/removeItem",
     async (foodId, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("accessToken");
 
-            const { data } = await axios.delete(`${API}/cart/removeCartItem`,
+            const { data } = await axios.delete(
+                `${API}/cart/removeCartItem`,
                 {
                     data: { foodId },
-                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true
                 }
             );
 
             return data.cart;
+
         } catch (error) {
-            return rejectWithValue(error.response.data);
+
+            return rejectWithValue(
+                error.response?.data
+            );
+
         }
     }
 );
 
-//update
 export const updateCartItem = createAsyncThunk(
     "cart/updateCart",
     async ({ foodId, type }, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("accessToken");
 
             const { data } = await axios.put(
                 `${API}/cart/updateCart`,
                 { foodId, type },
                 {
-                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true
                 }
             );
 
             return data.cart;
+
         } catch (error) {
-            return rejectWithValue(error.response.data);
+
+            return rejectWithValue(
+                error.response?.data
+            );
+
         }
     }
 );
-
 
 const cartSlice = createSlice({
     name: "cart",

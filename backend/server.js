@@ -6,21 +6,27 @@ import cors from "cors"
 import foodRoute from "./src/routes/foodRoute.js";
 import cartRoute from "./src/routes/cartRoute.js";
 import orderRoute from "./src/routes/orderRoute.js";
-;
+import cookieParser from "cookie-parser";
 
-const app=express()
-const port=process.env.port|| 8001;
+const app = express()
+const port = process.env.port || 8001;
 
 
 dbConnection()
 
-app.use(cors())
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true
+    })
+);
 app.use(express.json())
-app.use("/user",userRoute)
-app.use("/food",foodRoute)
-app.use("/cart",cartRoute)
-app.use("/order",orderRoute)
+app.use(cookieParser());
+app.use("/user", userRoute)
+app.use("/food", foodRoute)
+app.use("/cart", cartRoute)
+app.use("/order", orderRoute)
 
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log(`post number ${port}`)
 })

@@ -46,11 +46,72 @@ export const register = async (req, res) => {
 }
 
 //login
+// export const login = async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+
+//         const user = await userSchema.findOne({ email });
+//         if (!user) {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: "Unauthorized access!",
+//             });
+//         }
+
+//         const passwordCheck = await bcrypt.compare(password, user.password);
+//         if (!passwordCheck) {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: "Invalid credentials!",
+//             });
+//         }
+
+//         if (!user.isVerified) {
+//             return res.status(403).json({
+//                 success: false,
+//                 message: "Please verify yourself and then login!",
+//             });
+//         }
+
+//         if (user.role !== "admin" && user.role !== "user") {
+//             return res.status(403).json({
+//                 success: false,
+//                 message: "Access denied for this role!",
+//             });
+//         }
+
+//         await sessionSchema.findOneAndDelete({ userId: user._id });
+//         await sessionSchema.create({ userId: user._id });
+
+//         const accessToken = generateAccessToken(user);
+
+//         const refreshToken = generateRefreshToken(user);
+
+//         user.isLogin = true;
+//         await user.save();
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "User logged in successfully!",
+//             accessToken,
+//             refreshToken,
+//             user,
+//         });
+
+//     } catch (error) {
+//         return res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
+//     }
+// };
+
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
         const user = await userSchema.findOne({ email });
+
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -58,7 +119,11 @@ export const login = async (req, res) => {
             });
         }
 
-        const passwordCheck = await bcrypt.compare(password, user.password);
+        const passwordCheck = await bcrypt.compare(
+            password,
+            user.password
+        );
+
         if (!passwordCheck) {
             return res.status(401).json({
                 success: false,
@@ -80,21 +145,38 @@ export const login = async (req, res) => {
             });
         }
 
-        await sessionSchema.findOneAndDelete({ userId: user._id });
-        await sessionSchema.create({ userId: user._id });
+        await sessionSchema.findOneAndDelete({
+            userId: user._id
+        });
+
+        await sessionSchema.create({
+            userId: user._id
+        });
 
         const accessToken = generateAccessToken(user);
-
         const refreshToken = generateRefreshToken(user);
 
         user.isLogin = true;
         await user.save();
 
+        // IMPORTANT: store token in cookie
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: false, // production -> true
+            sameSite: "strict",
+            maxAge: 10 * 24 * 60 * 60 * 1000
+        });
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
         return res.status(200).json({
             success: true,
             message: "User logged in successfully!",
-            accessToken,
-            refreshToken,
             user,
         });
 
@@ -107,30 +189,89 @@ export const login = async (req, res) => {
 };
 
 //logout
-export const logout = async (req, res) => {
+// export const logout = async (req, res) => {
 
+//     try {
+//         const existing = await sessionSchema.findOne({ userId: req.userId });
+//         const user = await userSchema.findById({ _id: req.userId });
+//         if (existing) {
+//             await sessionSchema.findOneAndDelete({ userId: req.userId });
+//             user.isLogin = false;
+//             await user.save()
+//             return res.status(200).json({
+//                 success: true,
+//                 message: "Session successfully ended",
+//             });
+//         } else {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "User had no session",
+//             });
+//         }
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
+//     }
+// };
+
+export const logout = async (req, res) => {
     try {
-        const existing = await sessionSchema.findOne({ userId: req.userId });
-        const user = await userSchema.findById({ _id: req.userId });
+
+        const existing = await sessionSchema.findOne({
+            userId: req.userId
+        });
+
+        const user = await userSchema.findById(
+            req.userId
+        );
+
         if (existing) {
-            await sessionSchema.findOneAndDelete({ userId: req.userId });
+
+            // Delete session
+            await sessionSchema.findOneAndDelete({
+                userId: req.userId
+            });
+
+            // Update login status
             user.isLogin = false;
-            await user.save()
+            await user.save();
+
+            // IMPORTANT: clear cookies
+            res.clearCookie("accessToken", {
+                httpOnly: true,
+                secure: false,
+                sameSite: "strict"
+            });
+
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: false,
+                sameSite: "strict"
+            });
+
             return res.status(200).json({
                 success: true,
                 message: "Session successfully ended",
             });
+
         } else {
+
             return res.status(404).json({
                 success: false,
                 message: "User had no session",
             });
+
         }
+
     } catch (error) {
+
         res.status(500).json({
             success: false,
             message: error.message,
         });
+
     }
 };
 

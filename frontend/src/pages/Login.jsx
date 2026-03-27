@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loginSchema } from "../components/validation/validation";
 
-
 const Login = ({ onClose, switchToRegister }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,7 +15,7 @@ const Login = ({ onClose, switchToRegister }) => {
         e.preventDefault();
 
         try {
-            //  1. Frontend Validation (Yup)
+            // 1. Frontend Validation (Yup)
             await loginSchema.validate(
                 { email, password },
                 { abortEarly: false }
@@ -24,55 +23,64 @@ const Login = ({ onClose, switchToRegister }) => {
 
             setLoading(true);
 
-            //  2. Backend API Call
+            // 2. Backend API Call (IMPORTANT CHANGE)
             const res = await axios.post(
                 "http://localhost:8000/user/login",
-                { email, password }
+                { email, password },
+                {
+                    withCredentials: true // MUST for cookie
+                }
             );
 
             const data = res.data;
 
-            //  3. Save tokens & user info
-            localStorage.setItem("accessToken", data.accessToken);
-            localStorage.setItem("refreshToken", data.refreshToken);
+            // 3. Save ONLY user info (optional)
             localStorage.setItem("name", data.user.name);
             localStorage.setItem("email", data.user.email);
             localStorage.setItem("role", data.user.role);
 
-            //  4. Backend Success Message Show
-            toast.success(data.message || "Login successful");
+
+            toast.success(
+                data.message || "Login successful"
+            );
 
             const role = data.user.role;
 
-            // Modal close
             if (onClose) onClose();
 
-            // Small delay for better UX
             setTimeout(() => {
                 if (role === "admin") {
-                    navigate("/admin/dashboard", { replace: true });
+                    navigate(
+                        "/admin/dashboard",
+                        { replace: true }
+                    );
                 } else {
-                    navigate("/menu", { replace: true });
+                    navigate(
+                        "/menu",
+                        { replace: true }
+                    );
                 }
             }, 1000);
 
         } catch (error) {
 
-            //  Yup Validation Error 
             if (error.name === "ValidationError") {
                 error.inner.forEach((err) => {
                     toast.error(err.message);
                 });
             }
 
-            //  Backend Error Message
             else if (error.response) {
-                toast.error(error.response.data.message || "Login failed");
+                toast.error(
+                    error.response.data.message
+                    || "Login failed"
+                );
             }
 
-            //  Network / Server Error
             else {
-                toast.error("Server error, please try again");
+                toast.error(
+                    "Server error, please try again"
+                );
             }
 
         } finally {
@@ -102,7 +110,9 @@ const Login = ({ onClose, switchToRegister }) => {
                             placeholder="Email"
                             className="w-full mb-3 p-3 border rounded"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
                         />
 
                         <input
@@ -110,7 +120,9 @@ const Login = ({ onClose, switchToRegister }) => {
                             placeholder="Password"
                             className="w-full mb-4 p-3 border rounded"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) =>
+                                setPassword(e.target.value)
+                            }
                         />
 
                         <button
@@ -118,7 +130,9 @@ const Login = ({ onClose, switchToRegister }) => {
                             disabled={loading}
                             className="w-full bg-red-600 text-white p-3 rounded"
                         >
-                            {loading ? "Logging in..." : "Sign In"}
+                            {loading
+                                ? "Logging in..."
+                                : "Sign In"}
                         </button>
                     </form>
 

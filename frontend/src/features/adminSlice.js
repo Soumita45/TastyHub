@@ -1,160 +1,192 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const API = "http://localhost:8000";
 
-//getAllUser
-export const getAllUsers = createAsyncThunk("admin/getAllUsers", async (_, { rejectWithValue }) => {
-    try {
-        const token = localStorage.getItem("accessToken");
 
-        const res = await axios.get(`${API}/user/getAllUser`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        return res.data.users;;
-
-    } catch (error) {
-        return rejectWithValue(error.response?.data?.message);
-    }
-}
-);
-
-export const getDashboardStats = createAsyncThunk("admin/getDashboardStats", async (_, { rejectWithValue }) => {
-    try {
-        const token = localStorage.getItem("accessToken");
-
-        const res = await axios.get(`${API}/user/getTotal`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        console.log(res)
-        return res.data.stats;
-    } catch (error) {
-        return rejectWithValue(error.response?.data?.message);
-    }
-}
-);
-
-//getAllFood
-export const getAllFoods = createAsyncThunk("admin/getAllFoods",
-    async ({ page = 1, search = "", category = "", foodType = "" }, { rejectWithValue }) => {
+export const getAllUsers = createAsyncThunk(
+    "admin/getAllUsers",
+    async (_, { rejectWithValue }) => {
         try {
-              const token = localStorage.getItem("accessToken");
+
+            const res = await axios.get(
+                `${API}/user/getAllUser`,
+                {
+                    withCredentials: true
+                }
+            );
+
+            return res.data.users;
+
+        } catch (error) {
+
+            return rejectWithValue(
+                error.response?.data?.message
+            );
+
+        }
+    }
+);
+
+export const getDashboardStats = createAsyncThunk(
+    "admin/getDashboardStats",
+    async (_, { rejectWithValue }) => {
+        try {
+
+            const res = await axios.get(
+                `${API}/user/getTotal`,
+                {
+                    withCredentials: true
+                }
+            );
+
+            console.log(res);
+
+            return res.data.stats;
+
+        } catch (error) {
+
+            return rejectWithValue(
+                error.response?.data?.message
+            );
+
+        }
+    }
+);
+
+export const getAllFoods = createAsyncThunk(
+    "admin/getAllFoods",
+    async (
+        { page = 1, search = "", category = "", foodType = "" },
+        { rejectWithValue }
+    ) => {
+        try {
+
             const res = await axios.get(
                 `${API}/food/getAllFood?page=${page}&search=${search}&category=${category}&foodType=${foodType}`,
-            
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-            console.log(res)
+                {
+                    withCredentials: true
+                }
+            );
+
+            console.log(res);
+
             return res.data;
+
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message);
+
+            return rejectWithValue(
+                error.response?.data?.message
+            );
+
         }
     }
 );
 
-//deleteFood
-export const deleteFoods = createAsyncThunk("food/deleteFood", async (id, { rejectWithValue }) => {
-    try {
-        const token = localStorage.getItem("accessToken");
+export const deleteFoods = createAsyncThunk(
+    "food/deleteFood",
+    async (id, { rejectWithValue }) => {
+        try {
 
-        const res = await axios.delete(`${API}/food/deleteFood/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+            await axios.delete(
+                `${API}/food/deleteFood/${id}`,
+                {
+                    withCredentials: true
+                }
+            );
 
-        return id;
+            return id;
 
-    } catch (error) {
-        return rejectWithValue(error.response?.data);
+        } catch (error) {
+
+            return rejectWithValue(
+                error.response?.data
+            );
+
+        }
     }
-}
 );
 
-//fatchAllOrders
-export const fetchAllOrders = createAsyncThunk("orders/fetchAllOrders", async (_, { rejectWithValue }) => {
-    try {
-        const token = localStorage.getItem("accessToken");
+export const fetchAllOrders = createAsyncThunk(
+    "orders/fetchAllOrders",
+    async (_, { rejectWithValue }) => {
+        try {
 
-        const res = await axios.get(`${API}/order/getAllOrder`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+            const res = await axios.get(
+                `${API}/order/getAllOrder`,
+                {
+                    withCredentials: true
+                }
+            );
 
-        console.log(res)
-        return res.data;
+            console.log(res);
 
+            return res.data;
 
-    } catch (error) {
-        return rejectWithValue(error.response?.data);
+        } catch (error) {
+
+            return rejectWithValue(
+                error.response?.data
+            );
+
+        }
     }
-}
 );
 
-//addFood
-export const addFood = createAsyncThunk("food/addFood", async (formData, { rejectWithValue }) => {
-    try {
-        const token = localStorage.getItem("accessToken");
+export const addFood = createAsyncThunk(
+    "food/addFood",
+    async (formData, { rejectWithValue }) => {
+        try {
 
-        const res = await axios.post(
-            `${API}/food/addFood`,
-            formData,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+            const res = await axios.post(
+                `${API}/food/addFood`,
+                formData,
+                {
+                    withCredentials: true
+                }
+            );
 
-                },
-            }
-        );
+            return {
+                status: res.status,
+                message: res.data.message,
+            };
 
-        return {
-            status: res.status,
-            message: res.data.message,
-        };
+        } catch (error) {
 
+            return rejectWithValue(
+                error.response?.data?.message
+                || "Something went wrong"
+            );
 
-    } catch (error) {
-        return rejectWithValue(
-            error.response?.data?.message || "Something went wrong"
-        );
+        }
     }
-}
 );
 
-//updateFood
-export const updateFood = createAsyncThunk("admin/updateFood",
+export const updateFood = createAsyncThunk(
+    "admin/updateFood",
     async ({ id, data }, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            const res = await axios.put(
-                `http://localhost:8000/food/updateFood/${id}`,
-                data, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
 
-                },
-            }
+            const res = await axios.put(
+                `${API}/food/updateFood/${id}`,
+                data,
+                {
+                    withCredentials: true
+                }
             );
 
             return res.data;
+
         } catch (error) {
+
             return rejectWithValue(
-                error.response?.data?.message || "Update failed"
+                error.response?.data?.message
+                || "Update failed"
             );
+
         }
     }
 );
-
-
 
 const adminSlice = createSlice({
     name: "admin",
