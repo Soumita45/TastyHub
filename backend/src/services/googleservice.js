@@ -1,0 +1,15 @@
+import { OAuth2Client } from "google-auth-library";
+import dotenv from "dotenv/config"
+
+const client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID
+);
+
+export const verifyGoogleToken = async (credential) => {
+    const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    return ticket.getPayload();
+};

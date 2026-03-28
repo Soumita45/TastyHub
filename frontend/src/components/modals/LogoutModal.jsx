@@ -12,13 +12,11 @@ const LogoutModal = ({ onCancle }) => {
             const res = await axios.delete(
                 "http://localhost:8000/user/logout",
                 {
-                    withCredentials: true // IMPORTANT for cookie
+                    withCredentials: true
                 }
             );
 
             if (res.data.success) {
-
-                // Optional: clear user info only
                 localStorage.removeItem("name");
                 localStorage.removeItem("email");
                 localStorage.removeItem("role");

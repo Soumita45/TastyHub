@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loginSchema } from "../components/validation/validation";
 
+// Google Login import
+import { GoogleLogin } from "@react-oauth/google";
+
 const Login = ({ onClose, switchToRegister }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -11,11 +14,14 @@ const Login = ({ onClose, switchToRegister }) => {
 
     const navigate = useNavigate();
 
+    // =========================
+    // NORMAL LOGIN
+    // =========================
+
     const handleLogin = async (e) => {
         e.preventDefault();
 
         try {
-            // 1. Frontend Validation (Yup)
             await loginSchema.validate(
                 { email, password },
                 { abortEarly: false }
@@ -23,25 +29,34 @@ const Login = ({ onClose, switchToRegister }) => {
 
             setLoading(true);
 
-            // 2. Backend API Call (IMPORTANT CHANGE)
             const res = await axios.post(
                 "http://localhost:8000/user/login",
                 { email, password },
                 {
-                    withCredentials: true // MUST for cookie
+                    withCredentials: true
                 }
             );
 
             const data = res.data;
 
-            // 3. Save ONLY user info (optional)
-            localStorage.setItem("name", data.user.name);
-            localStorage.setItem("email", data.user.email);
-            localStorage.setItem("role", data.user.role);
+            localStorage.setItem(
+                "name",
+                data.user.name
+            );
 
+            localStorage.setItem(
+                "email",
+                data.user.email
+            );
+
+            localStorage.setItem(
+                "role",
+                data.user.role
+            );
 
             toast.success(
-                data.message || "Login successful"
+                data.message ||
+                "Login successful"
             );
 
             const role = data.user.role;
@@ -74,6 +89,85 @@ const Login = ({ onClose, switchToRegister }) => {
                 toast.error(
                     error.response.data.message
                     || "Login failed"
+                );
+            }
+
+            else {
+                toast.error(
+                    "Server error, please try again"
+                );
+            }
+
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // =========================
+    // GOOGLE LOGIN
+    // =========================
+
+    const handleGoogleSuccess = async (response) => {
+        try {
+            setLoading(true);
+
+            const res = await axios.post(
+                "http://localhost:8000/user/googleLogin",
+                {
+                    credential:
+                        response.credential
+                },
+                {
+                    withCredentials: true
+                }
+            );
+
+            const data = res.data;
+
+            localStorage.setItem(
+                "name",
+                data.user.name
+            );
+
+            localStorage.setItem(
+                "email",
+                data.user.email
+            );
+
+            localStorage.setItem(
+                "role",
+                data.user.role
+            );
+
+            toast.success(
+                data.message ||
+                "Google login successful"
+            );
+
+            const role = data.user.role;
+
+            if (onClose) onClose();
+
+            setTimeout(() => {
+                if (role === "admin") {
+                    navigate(
+                        "/admin/dashboard",
+                        { replace: true }
+                    );
+                } else {
+                    navigate(
+                        "/menu",
+                        { replace: true }
+                    );
+                }
+            }, 1000);
+
+        } catch (error) {
+
+            if (error.response) {
+                toast.error(
+                    error.response.data.message
+                    || "Google login failed"
                 );
             }
 
@@ -136,6 +230,25 @@ const Login = ({ onClose, switchToRegister }) => {
                         </button>
                     </form>
 
+                    <div className="flex items-center my-4">
+                        <div className="flex-grow h-px bg-gray-300"></div>
+                        <span className="mx-2 text-gray-500 text-sm">
+                            OR
+                        </span>
+                        <div className="flex-grow h-px bg-gray-300"></div>
+                    </div>
+
+                    <div className="flex justify-center">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() =>
+                                toast.error(
+                                    "Google login failed"
+                                )
+                            }
+                        />
+                    </div>
+
                     <p className="text-center mt-3 text-sm">
                         Don't have an account?{" "}
                         <button
@@ -145,6 +258,7 @@ const Login = ({ onClose, switchToRegister }) => {
                             Sign up
                         </button>
                     </p>
+
                 </div>
             </div>
         </div>

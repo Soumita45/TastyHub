@@ -10,28 +10,46 @@ const userSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true,
+            unique: true,
         },
+
         password: {
             type: String,
-            required: true,
         },
+
+        googleId: {
+            type: String,
+            default: null,
+        },
+
+        provider: {
+            type: String,
+            enum: ["local", "google"],
+            default: "local",
+        },
+        
         role: {
             type: String,
             enum: ["user", "admin"],
-            default: "user"
+            default: "user",
         },
+
         isVerified: {
             type: Boolean,
-            default: false
+            default: false,
         },
+
         isLogin: {
             type: Boolean,
-            default: false
+            default: false,
         },
+
         token: {
             type: String,
-            default: null
+            default: null,
         },
-    }, { timestamps: true });
+    },
+    { timestamps: true }
+);
 
 export default mongoose.model("user", userSchema);

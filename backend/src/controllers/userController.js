@@ -5,6 +5,7 @@ import sessionSchema from "../models/sessionSchema.js";
 import { verifyMail } from "../emailVerify/verifyMail.js";
 import orderSchema from "../models/orderSchema.js";
 import foodSchema from "../models/foodSchema.js";
+import { verifyGoogleToken } from "../services/googleservice.js";
 
 //register
 export const register = async (req, res) => {
@@ -46,66 +47,6 @@ export const register = async (req, res) => {
 }
 
 //login
-// export const login = async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-
-//         const user = await userSchema.findOne({ email });
-//         if (!user) {
-//             return res.status(401).json({
-//                 success: false,
-//                 message: "Unauthorized access!",
-//             });
-//         }
-
-//         const passwordCheck = await bcrypt.compare(password, user.password);
-//         if (!passwordCheck) {
-//             return res.status(401).json({
-//                 success: false,
-//                 message: "Invalid credentials!",
-//             });
-//         }
-
-//         if (!user.isVerified) {
-//             return res.status(403).json({
-//                 success: false,
-//                 message: "Please verify yourself and then login!",
-//             });
-//         }
-
-//         if (user.role !== "admin" && user.role !== "user") {
-//             return res.status(403).json({
-//                 success: false,
-//                 message: "Access denied for this role!",
-//             });
-//         }
-
-//         await sessionSchema.findOneAndDelete({ userId: user._id });
-//         await sessionSchema.create({ userId: user._id });
-
-//         const accessToken = generateAccessToken(user);
-
-//         const refreshToken = generateRefreshToken(user);
-
-//         user.isLogin = true;
-//         await user.save();
-
-//         return res.status(200).json({
-//             success: true,
-//             message: "User logged in successfully!",
-//             accessToken,
-//             refreshToken,
-//             user,
-//         });
-
-//     } catch (error) {
-//         return res.status(500).json({
-//             success: false,
-//             message: error.message,
-//         });
-//     }
-// };
-
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -159,7 +100,7 @@ export const login = async (req, res) => {
         user.isLogin = true;
         await user.save();
 
-        // IMPORTANT: store token in cookie
+
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: false, // production -> true
@@ -398,3 +339,72 @@ export const getTotal = async (req, res) => {
     });
   }
 };
+
+//GoogleLogin
+export const googleLogin = async (req, res) => {
+    try {
+
+        const { credential } = req.body;
+       
+        const payload = await verifyGoogleToken( credential );
+
+        const { sub, email, name, email_verified,} = payload;
+
+        let user = await userSchema.findOne({
+            email
+        });
+
+        if (!user) {
+            user = await userSchema.create({
+                name,
+                email,
+                googleId: sub,
+                provider: "google",
+                isVerified: email_verified,
+            });
+        }
+
+        await sessionSchema.findOneAndDelete({
+            userId: user._id
+        });
+
+        await sessionSchema.create({
+            userId: user._id
+        });
+
+        const accessToken = generateAccessToken(user);
+
+        const refreshToken = generateRefreshToken(user);
+
+        user.isLogin = true;
+
+        await user.save();
+
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: false, 
+            sameSite: "strict",
+            maxAge: 10 * 24 * 60 * 60 * 1000
+        });
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
+        return res.status(200).json({
+            success: true,
+            message:"Google login success",
+            user,
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
