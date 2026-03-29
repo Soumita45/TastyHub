@@ -25,7 +25,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
 
-        {/* Public Routes (No Sidebar) */}
+        {/* Public Routes*/}
         <Route path="/" element={<Home />} />
         <Route path="/verify/:token" element={<VerifyEmail />} />
 

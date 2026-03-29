@@ -9,7 +9,7 @@ import orderRoute from "./src/routes/orderRoute.js";
 import cookieParser from "cookie-parser";
 
 const app = express()
-const port = process.env.port || 8001;
+const port = process.env.port || 8000;
 
 
 dbConnection()
