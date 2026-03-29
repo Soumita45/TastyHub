@@ -1,6 +1,6 @@
 import cartSchema from "../models/cartSchema.js";
 import foodSchema from "../models/foodSchema.js";
-import orderSchema from "../models/orderSchema.js";
+
 
 export const addToCart = async (req, res) => {
     try {

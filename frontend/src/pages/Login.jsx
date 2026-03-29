@@ -13,11 +13,7 @@ const Login = ({ onClose, switchToRegister }) => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-
-    // =========================
     // NORMAL LOGIN
-    // =========================
-
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -102,11 +98,7 @@ const Login = ({ onClose, switchToRegister }) => {
             setLoading(false);
         }
     };
-
-    // =========================
     // GOOGLE LOGIN
-    // =========================
-
     const handleGoogleSuccess = async (response) => {
         try {
             setLoading(true);

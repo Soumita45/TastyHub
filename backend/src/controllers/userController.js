@@ -130,33 +130,6 @@ export const login = async (req, res) => {
 };
 
 //logout
-// export const logout = async (req, res) => {
-
-//     try {
-//         const existing = await sessionSchema.findOne({ userId: req.userId });
-//         const user = await userSchema.findById({ _id: req.userId });
-//         if (existing) {
-//             await sessionSchema.findOneAndDelete({ userId: req.userId });
-//             user.isLogin = false;
-//             await user.save()
-//             return res.status(200).json({
-//                 success: true,
-//                 message: "Session successfully ended",
-//             });
-//         } else {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "User had no session",
-//             });
-//         }
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: error.message,
-//         });
-//     }
-// };
-
 export const logout = async (req, res) => {
     try {
 
