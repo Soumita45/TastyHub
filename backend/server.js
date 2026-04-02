@@ -14,7 +14,7 @@ const port = process.env.port || 8000;
 
 dbConnection()
 
-import cors from "cors";
+
 
 app.use(
   cors({
