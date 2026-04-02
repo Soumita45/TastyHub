@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCart } from "../../features/cartSlice";
-import LogoutModal from "../modals/logoutModal";
+import LogoutModal from "../modals/LogoutModal";
 import CartModal from "../modals/CartModal";
 
 const UserSidebar = () => {
