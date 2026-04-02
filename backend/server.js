@@ -16,7 +16,7 @@ dbConnection()
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: "https://sweet-bavarois-111f48.netlify.app",
         credentials: true
     })
 );
