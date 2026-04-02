@@ -2,6 +2,8 @@ import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 const LogoutModal = ({ onCancle }) => {
 
     const navigate = useNavigate();
@@ -10,7 +12,7 @@ const LogoutModal = ({ onCancle }) => {
         try {
 
             const res = await axios.delete(
-                "http://localhost:8000/user/logout",
+                `${API}/user/logout`,
                 {
                     withCredentials: true
                 }
