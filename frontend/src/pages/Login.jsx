@@ -120,25 +120,13 @@ const Login = ({ onClose, switchToRegister }) => {
 
             const data = res.data;
 
-            localStorage.setItem(
-                "name",
-                data.user.name
-            );
+            localStorage.setItem("name",data.user.name );
 
-            localStorage.setItem(
-                "email",
-                data.user.email
-            );
+            localStorage.setItem("email",data.user.email);
 
-            localStorage.setItem(
-                "role",
-                data.user.role
-            );
+            localStorage.setItem("role",data.user.role);
 
-            toast.success(
-                data.message ||
-                "Google login successful"
-            );
+            toast.success( data.message || "Google login successful");
 
             const role = data.user.role;
 
@@ -146,14 +134,10 @@ const Login = ({ onClose, switchToRegister }) => {
 
             setTimeout(() => {
                 if (role === "admin") {
-                    navigate(
-                        "/admin/dashboard",
-                        { replace: true }
+                    navigate( "/admin/dashboard", { replace: true }
                     );
                 } else {
-                    navigate(
-                        "/menu",
-                        { replace: true }
+                    navigate("/menu", { replace: true }
                     );
                 }
             }, 1000);
@@ -162,15 +146,11 @@ const Login = ({ onClose, switchToRegister }) => {
 
             if (error.response) {
                 toast.error(
-                    error.response.data.message
-                    || "Google login failed"
-                );
+                    error.response.data.message|| "Google login failed");
             }
 
             else {
-                toast.error(
-                    "Server error, please try again"
-                );
+                toast.error( "Server error, please try again");
             }
 
         } finally {
