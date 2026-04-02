@@ -14,12 +14,19 @@ const port = process.env.port || 8000;
 
 dbConnection()
 
+import cors from "cors";
+
 app.use(
-    cors({
-        origin: "https://sweet-bavarois-111f48.netlify.app",
-        credentials: true
-    })
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://tastyhub-app.netlify.app"
+    ],
+    credentials: true,
+  })
 );
+
+"https://sweet-bavarois-111f48.netlify.app"
 app.use(express.json())
 app.use(cookieParser());
 app.use("/user", userRoute)
