@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
+import dotenv from "dotenv/config"
+
+const API = process.env.REACT_APP_API_URL;
+
 const VerifyEmail = () => {
     const [status, setStatus] = useState("verifying");
     const [error, setError] = useState("");
@@ -18,7 +22,7 @@ const VerifyEmail = () => {
                     return;
                 }
                 const res = await axios.get(
-                    "http://localhost:8000/user/verify",
+                    `${API}/user/verify`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`

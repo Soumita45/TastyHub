@@ -1,7 +1,8 @@
 import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import dotenv from "dotenv/config"
 
-const API = "http://localhost:8000";
+const API = process.env.REACT_APP_API_URL;
 
 export const getUser = createAsyncThunk(
     "user/getUser",

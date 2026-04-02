@@ -7,6 +7,10 @@ import { loginSchema } from "../components/validation/validation";
 // Google Login import
 import { GoogleLogin } from "@react-oauth/google";
 
+import dotenv from "dotenv/config"
+
+const API = process.env.REACT_APP_API_URL;
+
 const Login = ({ onClose, switchToRegister }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,7 +30,7 @@ const Login = ({ onClose, switchToRegister }) => {
             setLoading(true);
 
             const res = await axios.post(
-                "http://localhost:8000/user/login",
+                `${API}/user/login`,
                 { email, password },
                 {
                     withCredentials: true
@@ -104,7 +108,7 @@ const Login = ({ onClose, switchToRegister }) => {
             setLoading(true);
 
             const res = await axios.post(
-                "http://localhost:8000/user/googleLogin",
+                `${API}/user/googleLogin`,
                 {
                     credential:
                         response.credential

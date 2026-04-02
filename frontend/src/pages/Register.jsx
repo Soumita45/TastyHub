@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+import dotenv from "dotenv/config"
+
+const API = process.env.REACT_APP_API_URL;
+
 const Register = ({ onClose, switchToLogin }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -13,7 +17,7 @@ const Register = ({ onClose, switchToLogin }) => {
             setLoading(true);
 
             const res = await axios.post(
-                "http://localhost:8000/user/register",
+                `${API}/user/register`,
                 { name, email, password }
             );
 
