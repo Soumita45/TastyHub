@@ -1,7 +1,7 @@
 import { LayoutDashboard, Users, ShoppingBag, LogOut, Menu, X, UtensilsCrossed, } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import LogoutModal from "../modals/logoutModal";
+import LogoutModal from "../modals/LogoutModal";
 
 const AdminSidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
