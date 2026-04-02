@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import dotenv from "dotenv/config"
-
-const API = process.env.REACT_APP_API_URL;
+const API = import.meta.env.VITE_API_URL;
 
 const Register = ({ onClose, switchToLogin }) => {
     const [name, setName] = useState("");

@@ -7,9 +7,9 @@ import { loginSchema } from "../components/validation/validation";
 // Google Login import
 import { GoogleLogin } from "@react-oauth/google";
 
-import dotenv from "dotenv/config"
 
-const API = process.env.REACT_APP_API_URL;
+
+const API = import.meta.env.VITE_API_URL;
 
 const Login = ({ onClose, switchToRegister }) => {
     const [email, setEmail] = useState("");
