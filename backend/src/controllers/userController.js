@@ -103,15 +103,15 @@ export const login = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: false, // production -> true
-            sameSite: "strict",
+            secure: true, 
+            sameSite: "none",
             maxAge: 10 * 24 * 60 * 60 * 1000
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: false,
-            sameSite: "strict",
+            sameSite: "none",
             maxAge: 30 * 24 * 60 * 60 * 1000
         });
 
