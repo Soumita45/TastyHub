@@ -47,7 +47,7 @@ const Footer = () => {
 
               <li>
                 <Link
-                  to="/menu"
+                  to="/"
                   className="hover:text-red-600 transition duration-200"
                 >
                   Our Menu
